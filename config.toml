@@ -1,4 +1,126 @@
-baseURL = "http://alecstrong.com/"
-languageCode = "en-us"
-title = "Alec Strong"
-theme = "ananke"
+baseURL = "https://alecstrong.com/"
+languageCode = "en"                                      # website language
+defaultContentLanguage = "en"                            # [en, zh, ...] determines which i18n file to use
+title = "AlecStrong"                                     # website title
+theme = "LoveIt"                                         # theme
+enableGitInfo = false                                    # whether to use git commit log to generate lastmod record
+hasCJKLanguage = false                                   # whether to include chinese/japanese/korean
+paginate = 12                                            # default amount of posts in each pages
+enableEmoji = true                                       # whether to use emoji code
+copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License."
+                                                         # copyright description used only for seo schema
+
+                                                      #### Syntax Highlighting (https://gohugo.io/content-management/syntax-highlighting)
+pygmentsOptions = "linenos=table"
+pygmentsCodefences = true
+pygmentsUseClasses = true
+pygmentsCodefencesGuessSyntax = true
+
+staticDir = ["static", "../assets/others"]               # static directories
+
+[author]                                              #### Author Info
+  name = "Alec Strong"
+
+[sitemap]                                             #### Sitemap Info
+  changefreq = "weekly"
+  filename = "sitemap.xml"
+  priority = 0.5
+
+[Permalinks]                                          #### Permalinks Info (https://gohugo.io/content-management/urls/#permalinks)
+  posts = ":year/:month/:filename"
+
+[menu]                                                #### Menu Info
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "posts"
+    weight = 1
+
+  [[menu.main]]
+    identifier = "talks"
+    name = "Talks"
+    url = "talks"
+    weight = 2
+
+[params]
+  version = "5.x"                                        # LoveIt theme version
+  description = "LoveIt Theme Demo"                      # site description
+  keywords = ["XXXX", "Theme", "Hugo"]                   # site keywords
+
+                                                      #### Home Page Info
+  home_mode = "post"                                     # [post, other] home mode
+  home_paginate = 6                                      # special amount of posts in each home post page
+
+  socialShare = true                                     # whether to show social share links in post page
+
+                                                      #### Footer CopyRight Info
+  since = 2018                                           # Site creation time
+  icp = ''                                               # ICP info only in China (HTML format is allowed)
+  license= '<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
+                                                         # license info (HTML format is allowed)
+  gitRepo = ""                                           # public git repo url to link lastmod git commit only then enableGitInfo is true
+
+  linkToMarkdown = true                                  # whether to show link to Raw Markdown content of the post
+
+                                                      #### site verification code for Google/Bing/Yandex/Pinterest/Baidu
+  google_verification = ""
+  bing_verification = ""
+  yandex_verification = ""
+  pinterest_verification = ""
+  baidu_verification = ""
+
+  [params.cdn]                                       #### CSS and JS Files CDN
+    fontawesome_free_css = ''                           # for example '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.1/css/all.min.css" integrity="sha256-fdcFNFiBMrNfWL6OcAGQz6jDgNTRxnrLEd4vJYFWScE=" crossorigin="anonymous">'
+    animate_css = ''
+    gitalk_css = ''
+    gitalk_js = ''
+    valine_js = ''
+    jquery_js = ''
+    lazysizes_js = ''
+    smooth_scroll_js = ''
+    katex_css = ''
+    katex_js = ''
+    katex_auto_render_js = ''
+    mermaid_js = ''
+    echarts_js = ''
+    echarts_macarons_js = ''
+    typeit_js = ''
+    jquery_countdown_js = ''
+    aplayer_css = ''
+    aplayer_js = ''
+    meting_js = ''
+
+  [params.gravatar]                                      # Gravatar Info for preferred avatar in home page
+    email = "anstrong22@gmail.com"
+
+  [params.social]                                        # Social Info in home page
+    GitHub = "AlecStrong"
+    Twitter = "Strongolopolis"
+
+  [params.share]                                         # Social Share Links in post page
+    enable = true
+    Twitter = true
+    Reddit = true
+
+[privacy]                                             #### Privacy Info (https://gohugo.io/about/hugo-and-gdpr/)
+  [privacy.googleAnalytics]
+    anonymizeIP = true
+
+  [privacy.youtube]
+    privacyEnhanced = true
+
+[mediaTypes]                                          #### Options to make hugo output .md files.
+  [mediaTypes."text/plain"]
+    suffixes = ["md"]
+
+[outputFormats.MarkDown]                              #### Options to make hugo output .md files.
+  mediaType = "text/plain"
+  isPlainText = true
+  isHTML = false
+
+[outputs]                                             #### Options to make hugo output .md files.
+  home = ["HTML", "RSS"]
+  page = ["HTML", "MarkDown"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML", "RSS"]
+  taxonomyTerm = ["HTML"]

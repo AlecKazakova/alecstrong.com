@@ -1,28 +1,203 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
-  <url>
-    <loc>http://alecstrong.com/</loc>
-    <lastmod>2020-01-23T20:10:52-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://alecstrong.com/posts/my-first-post/</loc>
-    <lastmod>2020-01-23T20:10:52-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://alecstrong.com/posts/</loc>
-    <lastmod>2020-01-23T20:10:52-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://alecstrong.com/categories/</loc>
-  </url>
-  
-  <url>
-    <loc>http://alecstrong.com/tags/</loc>
-  </url>
-  
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+        <url>
+            <loc>https://alecstrong.com/</loc>
+
+                <lastmod>2020-01-23T20:57:46-05:00</lastmod>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/2020/01/github-actions-mpp/</loc>
+
+                <lastmod>2020-01-23T20:57:46-05:00</lastmod>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/posts/</loc>
+
+                <lastmod>2020-01-23T20:57:46-05:00</lastmod>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/amd/</loc>
+
+
+
+                <priority>0</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/eswa/</loc>
+
+
+
+                <priority>0</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/gadnat/</loc>
+
+
+
+                <priority>0</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/gkc/</loc>
+
+
+
+                <priority>0</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/gkc2/</loc>
+
+
+
+                <priority>0</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/ip/</loc>
+
+
+
+                <priority>0</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/kn/</loc>
+
+
+
+                <priority>0</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/mp/</loc>
+
+
+
+                <priority>0</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/sammpoia/</loc>
+
+
+
+                <priority>0</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/tros/</loc>
+
+
+
+                <priority>0</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/wtbiwipfk/</loc>
+
+
+
+                <priority>0</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/categories/</loc>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/tags/</loc>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/</loc>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/talks/</loc>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
 </urlset>
