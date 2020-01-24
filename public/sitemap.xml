@@ -15,7 +15,35 @@
         </url>
 
         <url>
+            <loc>https://alecstrong.com/mytalks/eswa/</loc>
+
+                <lastmod>2020-01-23T20:57:46-05:00</lastmod>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
             <loc>https://alecstrong.com/2020/01/github-actions-mpp/</loc>
+
+                <lastmod>2020-01-23T20:57:46-05:00</lastmod>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/mytalks/</loc>
 
                 <lastmod>2020-01-23T20:57:46-05:00</lastmod>
 
@@ -43,7 +71,21 @@
         </url>
 
         <url>
-            <loc>https://alecstrong.com/talks/amd/</loc>
+            <loc>https://alecstrong.com/talks/</loc>
+
+                <lastmod>2020-01-23T20:57:46-05:00</lastmod>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/mytalks/amd/</loc>
 
 
 
@@ -53,7 +95,7 @@
         </url>
 
         <url>
-            <loc>https://alecstrong.com/talks/eswa/</loc>
+            <loc>https://alecstrong.com/mytalks/gadnat/</loc>
 
 
 
@@ -63,7 +105,7 @@
         </url>
 
         <url>
-            <loc>https://alecstrong.com/talks/gadnat/</loc>
+            <loc>https://alecstrong.com/mytalks/gkc/</loc>
 
 
 
@@ -73,7 +115,7 @@
         </url>
 
         <url>
-            <loc>https://alecstrong.com/talks/gkc/</loc>
+            <loc>https://alecstrong.com/mytalks/gkc2/</loc>
 
 
 
@@ -83,7 +125,7 @@
         </url>
 
         <url>
-            <loc>https://alecstrong.com/talks/gkc2/</loc>
+            <loc>https://alecstrong.com/mytalks/ip/</loc>
 
 
 
@@ -93,7 +135,7 @@
         </url>
 
         <url>
-            <loc>https://alecstrong.com/talks/ip/</loc>
+            <loc>https://alecstrong.com/mytalks/kn/</loc>
 
 
 
@@ -103,7 +145,7 @@
         </url>
 
         <url>
-            <loc>https://alecstrong.com/talks/kn/</loc>
+            <loc>https://alecstrong.com/mytalks/mp/</loc>
 
 
 
@@ -113,7 +155,7 @@
         </url>
 
         <url>
-            <loc>https://alecstrong.com/talks/mp/</loc>
+            <loc>https://alecstrong.com/mytalks/sammpoia/</loc>
 
 
 
@@ -123,7 +165,7 @@
         </url>
 
         <url>
-            <loc>https://alecstrong.com/talks/sammpoia/</loc>
+            <loc>https://alecstrong.com/mytalks/tros/</loc>
 
 
 
@@ -133,17 +175,7 @@
         </url>
 
         <url>
-            <loc>https://alecstrong.com/talks/tros/</loc>
-
-
-
-                <priority>0</priority>
-
-
-        </url>
-
-        <url>
-            <loc>https://alecstrong.com/talks/wtbiwipfk/</loc>
+            <loc>https://alecstrong.com/mytalks/wtbiwipfk/</loc>
 
 
 
@@ -166,30 +198,6 @@
 
         <url>
             <loc>https://alecstrong.com/tags/</loc>
-
-
-                <changefreq>weekly</changefreq>
-
-
-                <priority>0.5</priority>
-
-
-        </url>
-
-        <url>
-            <loc>https://alecstrong.com/talks/</loc>
-
-
-                <changefreq>weekly</changefreq>
-
-
-                <priority>0.5</priority>
-
-
-        </url>
-
-        <url>
-            <loc>https://alecstrong.com/talks/</loc>
 
 
                 <changefreq>weekly</changefreq>

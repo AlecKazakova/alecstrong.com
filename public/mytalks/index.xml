@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Talks on AlecStrong</title>
-    <link>https://alecstrong.com/talks/</link>
-    <description>Recent content in Talks on AlecStrong</description>
+    <title>Mytalks on AlecStrong</title>
+    <link>https://alecstrong.com/mytalks/</link>
+    <description>Recent content in Mytalks on AlecStrong</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Thu, 23 Jan 2020 20:57:46 -0500</lastBuildDate>
 
-	<atom:link href="https://alecstrong.com/talks/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://alecstrong.com/mytalks/index.xml" rel="self" type="application/rss+xml" />
 
 
     <item>
       <title>Embracing SQL Without Abstraction</title>
-      <link>https://alecstrong.com/talks/eswa/</link>
+      <link>https://alecstrong.com/mytalks/eswa/</link>
       <pubDate>Thu, 23 Jan 2020 20:57:46 -0500</pubDate>
 
-      <guid>https://alecstrong.com/talks/eswa/</guid>
+      <guid>https://alecstrong.com/mytalks/eswa/</guid>
       <description>SQL Delight and SQL Brite are two libraries for SQLite which allow you to populate complex, reactive UIs efficiently and with minimal boilerplate. This talk will start with a brief history on why we chose to build our own SQLite libraries and an IntelliJ plugin at Square, what problems they do and do not solve, example usage, and finally what we plan on building next within SQL Delight.
      </description>
     </item>
 
     <item>
       <title></title>
-      <link>https://alecstrong.com/talks/amd/</link>
+      <link>https://alecstrong.com/mytalks/amd/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 
-      <guid>https://alecstrong.com/talks/amd/</guid>
+      <guid>https://alecstrong.com/mytalks/amd/</guid>
       <description>A Multiplatform Delight Presented with Jake Wharton
 SQL Delight, a type-safe database API, recently completed migration from being a Java-generating, Android-specific tool to a Kotlin-generating, multiplatform one. Migrating an API from Java to Kotlin has obvious benefits, but adding multiplatform support for iOS introduces a dynamic which complicates the API, code generation, and runtime.
 This talk will cover the challenges of platform-agnostic API design, type-safe multiplatform Kotlin code generation, and the integration of platform-specific runtimes such that the library not only runs efficiently on each platform but also integrates well with the other languages each might be using.</description>
@@ -35,69 +35,69 @@ This talk will cover the challenges of platform-agnostic API design, type-safe m
 
     <item>
       <title></title>
-      <link>https://alecstrong.com/talks/gadnat/</link>
+      <link>https://alecstrong.com/mytalks/gadnat/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 
-      <guid>https://alecstrong.com/talks/gadnat/</guid>
+      <guid>https://alecstrong.com/mytalks/gadnat/</guid>
       <description>Good APIs Don&#39;t Need a Tutorial Working in an enormous codebase is hard. You&#39;re new and you don&#39;t know where to start. There&#39;s a ton of tools available to you and you don&#39;t know which to pick.
 Building that codebase is just as hard - but there&#39;s a trick to making it fantastic. This talk is going to draw corollaries between API design and video game design, and we&#39;re all going to learn from the greatest game design in the game on how to be friendly to newcomers.</description>
     </item>
 
     <item>
       <title></title>
-      <link>https://alecstrong.com/talks/gkc/</link>
+      <link>https://alecstrong.com/mytalks/gkc/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 
-      <guid>https://alecstrong.com/talks/gkc/</guid>
+      <guid>https://alecstrong.com/mytalks/gkc/</guid>
       <description>Generating Kotlin Code Presented with Jake Wharton
 Kotlin provides simpler options than traditional Java patterns like builders and factories often found in generated code. By using Kotlin to generate an API, you can not only create a pleasant experience from both languages, but also unlock the possibility of targeting native and JS. This talk will cover the tools needed to generate Kotlin code and also the features available in Kotlin that can improve your generated code.</description>
     </item>
 
     <item>
       <title></title>
-      <link>https://alecstrong.com/talks/gkc2/</link>
+      <link>https://alecstrong.com/mytalks/gkc2/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 
-      <guid>https://alecstrong.com/talks/gkc2/</guid>
+      <guid>https://alecstrong.com/mytalks/gkc2/</guid>
       <description>Generating Kotlin Code Presented with Jake Wharton
 Kotlin provides simpler options than traditional Java patterns like builders and factories often found in generated code. By using Kotlin to generate an API, you can not only create a pleasant experience from both languages, but also unlock the possibility of targeting native and JS. This talk will cover the tools needed to generate Kotlin code and also the features available in Kotlin that can improve your generated code.</description>
     </item>
 
     <item>
       <title></title>
-      <link>https://alecstrong.com/talks/ip/</link>
+      <link>https://alecstrong.com/mytalks/ip/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 
-      <guid>https://alecstrong.com/talks/ip/</guid>
+      <guid>https://alecstrong.com/mytalks/ip/</guid>
       <description>IntelliJ Plugins A brief introduction to IntelliJ plugin architectures and a guide on how to navigate the IntelliJ APIs. Since everything is extendable in IntelliJ you are enabled to build nearly anything you can imagine, but the breadth of APIs and lack of thorough documentation also means starting out is very daunting. Through this presentation you will gain an understanding of the IntelliJ API design and the skills to get started on building tools.</description>
     </item>
 
     <item>
       <title></title>
-      <link>https://alecstrong.com/talks/kn/</link>
+      <link>https://alecstrong.com/mytalks/kn/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 
-      <guid>https://alecstrong.com/talks/kn/</guid>
+      <guid>https://alecstrong.com/mytalks/kn/</guid>
       <description>Kotlin/Native A short talk introducing Kotlin/Native, how and why it&#39;s used and where it might fit in Android Development.
  </description>
     </item>
 
     <item>
       <title></title>
-      <link>https://alecstrong.com/talks/mp/</link>
+      <link>https://alecstrong.com/mytalks/mp/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 
-      <guid>https://alecstrong.com/talks/mp/</guid>
+      <guid>https://alecstrong.com/mytalks/mp/</guid>
       <description>Multiplatform Persistence A lot of client code is already multiplatform - the tools underneath client backends like SQLite, protobufs, and HTTP are themselves platform agnostic. Codebases for Android and iOS already look similar on top of these tools until exposed to platform specific interfaces. Realistically how much could be shared across multiple platforms without affecting any codebase significantly?
 This talk will go over SQLDelight 1.0 - a recent release which has enabled multiplatform SQLite development using Kotlin Native, as well as how to architect your app’s data layer to be shared across platforms.</description>
     </item>
 
     <item>
       <title></title>
-      <link>https://alecstrong.com/talks/sammpoia/</link>
+      <link>https://alecstrong.com/mytalks/sammpoia/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 
-      <guid>https://alecstrong.com/talks/sammpoia/</guid>
+      <guid>https://alecstrong.com/mytalks/sammpoia/</guid>
       <description>SHIPPING A MOBILE MULTIPLATFORM PROJECT ON IOS &amp;amp; ANDROID Presented with Ben Asher
 Getting a multiplatform project started within an active engineering team across multiple platforms is challenging. You have to pitch the project to your colleagues, wrestle with reconciling platform-specific technical issues, and actually ship it for each supported platform.
 We have spent the last year doing just that for PlanGrid and CashApp. Come learn how to get your multiplatform project started and what kinds of problems you can expect to solve along the way.</description>
@@ -105,20 +105,20 @@ We have spent the last year doing just that for PlanGrid and CashApp. Come learn
 
     <item>
       <title></title>
-      <link>https://alecstrong.com/talks/tros/</link>
+      <link>https://alecstrong.com/mytalks/tros/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 
-      <guid>https://alecstrong.com/talks/tros/</guid>
+      <guid>https://alecstrong.com/mytalks/tros/</guid>
       <description>The Resurgence of SQL Presented with Jake Wharton
 SQL may have fallen out of fashion over the last decade, but libraries like SQL Delight and Room are now placing it at the forefront of their use. As a language, SQL is more declarative and expressive than any ORM could hope to be. With the support of strong tooling, database interactions not only become easier but you’re able to leverage more of its power.</description>
     </item>
 
     <item>
       <title></title>
-      <link>https://alecstrong.com/talks/wtbiwipfk/</link>
+      <link>https://alecstrong.com/mytalks/wtbiwipfk/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 
-      <guid>https://alecstrong.com/talks/wtbiwipfk/</guid>
+      <guid>https://alecstrong.com/mytalks/wtbiwipfk/</guid>
       <description>What&#39;s the big IDEA? Writing IntelliJ plugins for Kotlin Presented with Egor Andreevich
 With Kotlin having full interop with Java, mixed codebases have become common and effective - but have made writing developer tools more challenging. How do you support multiple languages with a single tool? How do you convert existing plugins from Java to Kotlin and is there a way to avoid having to?
 This talk will cover UAST (Universal Abstract Syntax Tree), an API for working with languages generically.</description>
