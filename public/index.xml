@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Alec Strong</title>
+    <link>http://alecstrong.com/</link>
+    <description>Recent content on Alec Strong</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 23 Jan 2020 20:10:52 -0500</lastBuildDate>
+    
+	<atom:link href="http://alecstrong.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>My First Post</title>
+      <link>http://alecstrong.com/posts/my-first-post/</link>
+      <pubDate>Thu, 23 Jan 2020 20:10:52 -0500</pubDate>
+      
+      <guid>http://alecstrong.com/posts/my-first-post/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
