@@ -10,4 +10,4 @@ A brief introduction to IntelliJ plugin architectures and a guide on how to navi
 
 ---
 
-<<{ speakerdeck 75fd79fcbbba4143bb0f688181809106 1.77777777777778>}}
+{{< speakerdeck 75fd79fcbbba4143bb0f688181809106 1.77777777777778 >}}

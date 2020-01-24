@@ -1,7 +1,7 @@
 # Talks
 
 
-2019-12-16 __[Shipping a mobile multiplatform project on iOS & Android](../mytalks/sammpoia)__ _(kotlinconf 2019, Copenhagen Denmark)_
+2019-12-16 __[Shipping a mobile multiplatform project on iOS & Android](../mytalks/sammpoia)__ _(Kotlinconf 2019, Copenhagen Denmark)_
 
 2019-09-27 __[Good APIs Don't Need a Tutorial](../mytalks/gadnat)__ _(Droidcon NYC 2019, NYC)_
 
