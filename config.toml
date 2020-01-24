@@ -3,7 +3,7 @@ languageCode = "en"                                      # website language
 defaultContentLanguage = "en"                            # [en, zh, ...] determines which i18n file to use
 title = "AlecStrong"                                     # website title
 theme = "LoveIt"                                         # theme
-enableGitInfo = false                                    # whether to use git commit log to generate lastmod record
+enableGitInfo = true                                    # whether to use git commit log to generate lastmod record
 hasCJKLanguage = false                                   # whether to include chinese/japanese/korean
 paginate = 12                                            # default amount of posts in each pages
 enableEmoji = true                                       # whether to use emoji code
@@ -53,41 +53,13 @@ staticDir = ["static", "../assets/others"]               # static directories
   socialShare = true                                     # whether to show social share links in post page
 
                                                       #### Footer CopyRight Info
-  since = 2018                                           # Site creation time
+  since = 2020                                           # Site creation time
   icp = ''                                               # ICP info only in China (HTML format is allowed)
   license= '<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
                                                          # license info (HTML format is allowed)
-  gitRepo = ""                                           # public git repo url to link lastmod git commit only then enableGitInfo is true
+  gitRepo = "https://github.com/alecstrong/alecstrong.com"
 
   linkToMarkdown = true                                  # whether to show link to Raw Markdown content of the post
-
-                                                      #### site verification code for Google/Bing/Yandex/Pinterest/Baidu
-  google_verification = ""
-  bing_verification = ""
-  yandex_verification = ""
-  pinterest_verification = ""
-  baidu_verification = ""
-
-  [params.cdn]                                       #### CSS and JS Files CDN
-    fontawesome_free_css = ''                           # for example '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.1/css/all.min.css" integrity="sha256-fdcFNFiBMrNfWL6OcAGQz6jDgNTRxnrLEd4vJYFWScE=" crossorigin="anonymous">'
-    animate_css = ''
-    gitalk_css = ''
-    gitalk_js = ''
-    valine_js = ''
-    jquery_js = ''
-    lazysizes_js = ''
-    smooth_scroll_js = ''
-    katex_css = ''
-    katex_js = ''
-    katex_auto_render_js = ''
-    mermaid_js = ''
-    echarts_js = ''
-    echarts_macarons_js = ''
-    typeit_js = ''
-    jquery_countdown_js = ''
-    aplayer_css = ''
-    aplayer_js = ''
-    meting_js = ''
 
   [params.gravatar]                                      # Gravatar Info for preferred avatar in home page
     email = "anstrong22@gmail.com"

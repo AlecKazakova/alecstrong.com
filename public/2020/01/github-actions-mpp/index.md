@@ -1,12 +1,12 @@
 # Integrating Github Actions for Kotlin Multiplatform
 
 
-With Kotlin Multiplatform (kmp) it's possible to build artifacts for multiple platforms using the same toolchain, 
-but until portable artifacts for kmp are released you need to build platform artifacts on
+With Kotlin Multiplatform (KMP) it's possible to build artifacts for multiple platforms using the same toolchain, 
+but until portable artifacts for KMP are released you need to build platform artifacts on
 their respective platforms.
 
-With SqlDelight 1.2.2 we now also deploy windows (mingW) artifacts, meaning it's impossible to publish
-from a single OS (since we also support macOS targets). There was no simple setup with travis and github actions
+With SqlDelight 1.2.2 we now also deploy Windows (mingW) artifacts, meaning it's impossible to publish
+from a single OS (since we also support macOS targets). There was no simple setup with Travis and Github Actions
 is the new hot stuff so we gave that a go and here's how it works:
 
 ### Continuous Integration
@@ -22,10 +22,10 @@ on:
       - '*.md'
 ```
 
-It ignores changes to documentation meaning PRs that only touch the ignored files immediately go gree. Dope!
+It ignores changes to documentation meaning PRs that only touch the ignored files immediately go green. Dope!
 
 In a workflow file you specify a series of jobs that happen when the workflow is triggered, and you can use
-this to boot up all the different OS you target for kmp. You can do it by specifying multiple jobs (one for each OS)
+this to boot up all the different OS's you target for KMP. You can do it by specifying multiple jobs (one for each OS)
 or using a build matrix which is what we do.
 
 ```yaml
@@ -76,11 +76,11 @@ work is done for you!
 ### Continuous Deployment
 
 The more challenging bit is configuring releases. To do this we have a single workflow [Release](https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Release.yml)
-which publishes the artifacts and intellij plugin - both for official releases and snapshots.
+which publishes the artifacts and IntelliJ plugin - both for official releases and snapshots.
 
-To facilitate releasing you need to give github some
+To facilitate releasing you need to give Github some
 [secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets) - your
-sonatype username/password and a gpg key, and then expose those to the workflow job step which runs the publish:
+Sonatype username/password and a GPG key, and then expose those to the workflow job step which runs the publish:
 
 ```yaml
 - name: Publish the windows artifact
@@ -91,7 +91,7 @@ sonatype username/password and a gpg key, and then expose those to the workflow 
   run: ./gradlew publishMingwPublicationToMavenRepository
 ```
 
-The gpg key you add to github settings should be an ascii-armored version of the key which you can get
+The GPG key you add to Github settings should be an ascii-armored version of the key which you can get
 by running `gpg --export --ascii <keyid> | pbcopy` in your console. If you're using gradle's signing plugin 
 (if you're not sure, you probably are) it needs to be configured to use the ascii armored key.
 
@@ -115,14 +115,12 @@ signing {
 }
 ```
 
-The kmp gradle plugin is smart enough to not try and build/publish for unsupported architectures, so we just let the macOS
-job publish all the artifacts it can, and then windows only tries to publish the mingW publications.
+The KMP Gradle plugin is smart enough to not try and build/publish for unsupported architectures, so we just let the macOS
+job publish all the artifacts it can, and then Windows only tries to publish the mingW publications.
 
 ---
 
 And thats it! We also have a workflow to [deploy gh-pages with mkdocs](https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Publish-Website.yml)
-and a job which [publishes the intellij plugin](https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Release.yml#L37-L47). With Github Actions
+and a job which [publishes the IntelliJ plugin](https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Release.yml#L37-L47). With Github Actions
 we've been able to shrink the actual releasing process [pretty dramatically](https://github.com/cashapp/sqldelight/commit/5acee5551bd1c6a19233ed4b32c0c7bb445faff2)
 and I'm looking forward to using it more!
-
-[@strongolopolis](https://twitter.com/Strongolopolis)

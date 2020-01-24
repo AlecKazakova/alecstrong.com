@@ -17,8 +17,8 @@
 <meta name="theme-color" content="#ffffff">
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Integrating Github Actions for Kotlin Multiplatform"/>
-<meta name="twitter:description" content="With Kotlin Multiplatform (kmp) it&#39;s possible to build artifacts for multiple platforms using the same toolchain, but until portable artifacts for kmp are released you need to build platform artifacts on their respective platforms.
-With SqlDelight 1.2.2 we now also deploy windows (mingW) artifacts, meaning it&#39;s impossible to publish from a single OS (since we also support macOS targets). There was no simple setup with travis and github actions is the new hot stuff so we gave that a go and here&#39;s how it works:"/>
+<meta name="twitter:description" content="With Kotlin Multiplatform (KMP) it&#39;s possible to build artifacts for multiple platforms using the same toolchain, but until portable artifacts for KMP are released you need to build platform artifacts on their respective platforms.
+With SqlDelight 1.2.2 we now also deploy Windows (mingW) artifacts, meaning it&#39;s impossible to publish from a single OS (since we also support macOS targets). There was no simple setup with Travis and Github Actions is the new hot stuff so we gave that a go and here&#39;s how it works:"/>
 <script type="application/ld+json">
     {
     "@context": "http://schema.org",
@@ -31,13 +31,13 @@ With SqlDelight 1.2.2 we now also deploy windows (mingW) artifacts, meaning it&#
 
     "genre": "posts",
 
-    "wordcount":  687 ,
+    "wordcount":  686 ,
     "url": "https:\/\/alecstrong.com\/2020\/01\/github-actions-mpp\/",
 
         "datePublished": "2020-01-23T20:57:46-05:00",
 
 
-        "dateModified": "2020-01-23T20:57:46-05:00",
+        "dateModified": "2020-01-24T09:03:14-05:00",
 
 
         "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
@@ -112,7 +112,7 @@ With SqlDelight 1.2.2 we now also deploy windows (mingW) artifacts, meaning it&#
             </div>
             <div class="post-meta-other">
                 <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-01-23>2020-01-23</time>&nbsp;
-                <i class="fas fa-pencil-alt fa-fw"></i>about 687 words&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>about 686 words&nbsp;
                 <i class="far fa-clock fa-fw"></i>4 min&nbsp;</div>
         </div>
 
@@ -146,11 +146,11 @@ With SqlDelight 1.2.2 we now also deploy windows (mingW) artifacts, meaning it&#
 
 
 
-            <p>With Kotlin Multiplatform (kmp) it's possible to build artifacts for multiple platforms using the same toolchain,
-but until portable artifacts for kmp are released you need to build platform artifacts on
+            <p>With Kotlin Multiplatform (KMP) it's possible to build artifacts for multiple platforms using the same toolchain,
+but until portable artifacts for KMP are released you need to build platform artifacts on
 their respective platforms.</p>
-<p>With SqlDelight 1.2.2 we now also deploy windows (mingW) artifacts, meaning it's impossible to publish
-from a single OS (since we also support macOS targets). There was no simple setup with travis and github actions
+<p>With SqlDelight 1.2.2 we now also deploy Windows (mingW) artifacts, meaning it's impossible to publish
+from a single OS (since we also support macOS targets). There was no simple setup with Travis and Github Actions
 is the new hot stuff so we gave that a go and here's how it works:</p>
 <a class="post-dummy-target" id="continuous-integration"></a><h3>Continuous Integration</h3>
 <p>Github Actions is configured through yaml files, each one describing a specific workflow. For CI we have a few workflows but the main one
@@ -171,9 +171,9 @@ is <a href="https://github.com/cashapp/sqldelight/blob/master/.github/workflows/
 </span><span class="w">      </span>-<span class="w"> </span><span class="s1">&#39;*.md&#39;</span><span class="w">
 </span></code></pre></td></tr></table>
 </div>
-</div><p>It ignores changes to documentation meaning PRs that only touch the ignored files immediately go gree. Dope!</p>
+</div><p>It ignores changes to documentation meaning PRs that only touch the ignored files immediately go green. Dope!</p>
 <p>In a workflow file you specify a series of jobs that happen when the workflow is triggered, and you can use
-this to boot up all the different OS you target for kmp. You can do it by specifying multiple jobs (one for each OS)
+this to boot up all the different OS's you target for KMP. You can do it by specifying multiple jobs (one for each OS)
 or using a build matrix which is what we do.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -248,10 +248,10 @@ is a trusted published version to protect your repo from an attack vector - agai
 work is done for you!</p>
 <a class="post-dummy-target" id="continuous-deployment"></a><h3>Continuous Deployment</h3>
 <p>The more challenging bit is configuring releases. To do this we have a single workflow <a href="https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Release.yml">Release</a>
-which publishes the artifacts and intellij plugin - both for official releases and snapshots.</p>
-<p>To facilitate releasing you need to give github some
+which publishes the artifacts and IntelliJ plugin - both for official releases and snapshots.</p>
+<p>To facilitate releasing you need to give Github some
 <a href="https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets">secrets</a> - your
-sonatype username/password and a gpg key, and then expose those to the workflow job step which runs the publish:</p>
+Sonatype username/password and a GPG key, and then expose those to the workflow job step which runs the publish:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -270,7 +270,7 @@ sonatype username/password and a gpg key, and then expose those to the workflow 
 </span><span class="w">  </span>run<span class="p">:</span><span class="w"> </span>./gradlew<span class="w"> </span>publishMingwPublicationToMavenRepository<span class="w">
 </span></code></pre></td></tr></table>
 </div>
-</div><p>The gpg key you add to github settings should be an ascii-armored version of the key which you can get
+</div><p>The GPG key you add to Github settings should be an ascii-armored version of the key which you can get
 by running <code>gpg --export --ascii &lt;keyid&gt; | pbcopy</code> in your console. If you're using gradle's signing plugin
 (if you're not sure, you probably are) it needs to be configured to use the ascii armored key.</p>
 <div class="highlight"><div class="chroma">
@@ -313,14 +313,13 @@ by running <code>gpg --export --ascii &lt;keyid&gt; | pbcopy</code> in your cons
 <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>The kmp gradle plugin is smart enough to not try and build/publish for unsupported architectures, so we just let the macOS
-job publish all the artifacts it can, and then windows only tries to publish the mingW publications.</p>
+</div><p>The KMP Gradle plugin is smart enough to not try and build/publish for unsupported architectures, so we just let the macOS
+job publish all the artifacts it can, and then Windows only tries to publish the mingW publications.</p>
 <hr>
 <p>And thats it! We also have a workflow to <a href="https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Publish-Website.yml">deploy gh-pages with mkdocs</a>
-and a job which <a href="https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Release.yml#L37-L47">publishes the intellij plugin</a>. With Github Actions
+and a job which <a href="https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Release.yml#L37-L47">publishes the IntelliJ plugin</a>. With Github Actions
 we've been able to shrink the actual releasing process <a href="https://github.com/cashapp/sqldelight/commit/5acee5551bd1c6a19233ed4b32c0c7bb445faff2">pretty dramatically</a>
 and I'm looking forward to using it more!</p>
-<p><a href="https://twitter.com/Strongolopolis">@strongolopolis</a></p>
 
         </div>
 
@@ -328,7 +327,7 @@ and I'm looking forward to using it more!</p>
     <div class="post-info">
         <div class="post-info-line">
             <div class="post-info-mod">
-                <span>This article is updated with 2020-01-23</span>
+                <span>This article is updated with 2020-01-24</span>
             </div>
             <div class="post-info-license">
 
@@ -398,7 +397,7 @@ and I'm looking forward to using it more!</p>
             Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a>&nbsp;|&nbsp;Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
         </div>
         <div class="copyright-line">
-            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2018 - 2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://alecstrong.com/">Alec Strong</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://alecstrong.com/">Alec Strong</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
     </div>
 </footer>
 

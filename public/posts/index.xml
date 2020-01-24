@@ -18,8 +18,8 @@
       <pubDate>Thu, 23 Jan 2020 20:57:46 -0500</pubDate>
 
       <guid>https://alecstrong.com/2020/01/github-actions-mpp/</guid>
-      <description>With Kotlin Multiplatform (kmp) it&#39;s possible to build artifacts for multiple platforms using the same toolchain, but until portable artifacts for kmp are released you need to build platform artifacts on their respective platforms.
-With SqlDelight 1.2.2 we now also deploy windows (mingW) artifacts, meaning it&#39;s impossible to publish from a single OS (since we also support macOS targets). There was no simple setup with travis and github actions is the new hot stuff so we gave that a go and here&#39;s how it works:</description>
+      <description>With Kotlin Multiplatform (KMP) it&#39;s possible to build artifacts for multiple platforms using the same toolchain, but until portable artifacts for KMP are released you need to build platform artifacts on their respective platforms.
+With SqlDelight 1.2.2 we now also deploy Windows (mingW) artifacts, meaning it&#39;s impossible to publish from a single OS (since we also support macOS targets). There was no simple setup with Travis and Github Actions is the new hot stuff so we gave that a go and here&#39;s how it works:</description>
     </item>
 
   </channel>

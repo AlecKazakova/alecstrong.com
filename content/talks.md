@@ -7,7 +7,7 @@ showReadingTime: false
 
 2019-12-16 __[Shipping a mobile multiplatform project on iOS & Android](../mytalks/sammpoia)__ _(kotlinconf 2019, Copenhagen Denmark)_
 
-2019-09-27 __[Good APIs Don't Need a Tutorial](../mytalks/gadnat)__ _(Droidcon NYC 2019, NYC)
+2019-09-27 __[Good APIs Don't Need a Tutorial](../mytalks/gadnat)__ _(Droidcon NYC 2019, NYC)_
 
 2018-10-05 __[What's the big IDEA? Writing IntelliJ plugins for Kotlin](../mytalks/wtbiwipfk)__ _(Kotlinconf 2018, Amsterdam)_
 
