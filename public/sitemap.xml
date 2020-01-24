@@ -155,16 +155,6 @@
         </url>
 
         <url>
-            <loc>https://alecstrong.com/mytalks/sammpoia/</loc>
-
-
-
-                <priority>0</priority>
-
-
-        </url>
-
-        <url>
             <loc>https://alecstrong.com/mytalks/tros/</loc>
 
 
@@ -186,6 +176,18 @@
 
         <url>
             <loc>https://alecstrong.com/categories/</loc>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/mytalks/sammpoia/</loc>
 
 
                 <changefreq>weekly</changefreq>

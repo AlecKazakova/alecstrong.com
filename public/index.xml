@@ -40,17 +40,17 @@
                 <pubDate>Thu, 23 Jan 2020 20:57:46 -0500</pubDate>
 
                 <guid>https://alecstrong.com/talks/</guid>
-                <description>&lt;p&gt;2019-12-16 &lt;strong&gt;&lt;a href=&#34;talks/sammpoia&#34;&gt;Shipping a mobile multiplatform project on iOS &amp;amp; Android&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(kotlinconf 2019, Copenhagen Denmark)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2019-09-27 &lt;strong&gt;&lt;a href=&#34;gadnat&#34;&gt;Good APIs Don&#39;t Need a Tutorial&lt;/a&gt;&lt;/strong&gt; _(Droidcon NYC 2019, NYC)&lt;/p&gt;
-&lt;p&gt;2018-10-05 &lt;strong&gt;&lt;a href=&#34;wtbiwipfk&#34;&gt;What&#39;s the big IDEA? Writing IntelliJ plugins for Kotlin&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Kotlinconf 2018, Amsterdam)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2018-10-04  &lt;strong&gt;&lt;a href=&#34;amd&#34;&gt;A Multiplatform Delight&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Kotlinconf 2018, Amsterdam)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2018-08-27 &lt;strong&gt;&lt;a href=&#34;mp&#34;&gt;Multiplatform Persistence&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon NYC 2018, NYC)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2018-01-29 &lt;strong&gt;&lt;a href=&#34;kn&#34;&gt;Kotlin/Native&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Android KW, Kitchener-Waterloo)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2017-11-05 &lt;strong&gt;&lt;a href=&#34;gkc2&#34;&gt;Generating Kotlin Code&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon SF, San Francisco)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2017-11-03 &lt;strong&gt;&lt;a href=&#34;gkc&#34;&gt;Generating Kotlin Code&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Kotlinconf 2017, San Francisco)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2017-09-25 &lt;strong&gt;&lt;a href=&#34;tros&#34;&gt;The Resurgence of SQL&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon NYC 2017, NYC)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2016-09-30 &lt;strong&gt;&lt;a href=&#34;eswa&#34;&gt;Embracing SQL Without Abstraction&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon NYC 2016, NYC)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2016-08-05 &lt;strong&gt;&lt;a href=&#34;ip&#34;&gt;IntelliJ Plugins&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Internal Talk Series, Square)&lt;/em&gt;&lt;/p&gt;
+                <description>&lt;p&gt;2019-12-16 &lt;strong&gt;&lt;a href=&#34;../mytalks/sammpoia&#34;&gt;Shipping a mobile multiplatform project on iOS &amp;amp; Android&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(kotlinconf 2019, Copenhagen Denmark)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;2019-09-27 &lt;strong&gt;&lt;a href=&#34;../mytalks/gadnat&#34;&gt;Good APIs Don&#39;t Need a Tutorial&lt;/a&gt;&lt;/strong&gt; _(Droidcon NYC 2019, NYC)&lt;/p&gt;
+&lt;p&gt;2018-10-05 &lt;strong&gt;&lt;a href=&#34;../mytalks/wtbiwipfk&#34;&gt;What&#39;s the big IDEA? Writing IntelliJ plugins for Kotlin&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Kotlinconf 2018, Amsterdam)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;2018-10-04  &lt;strong&gt;&lt;a href=&#34;../mytalks/amd&#34;&gt;A Multiplatform Delight&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Kotlinconf 2018, Amsterdam)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;2018-08-27 &lt;strong&gt;&lt;a href=&#34;../mytalks/mp&#34;&gt;Multiplatform Persistence&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon NYC 2018, NYC)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;2018-01-29 &lt;strong&gt;&lt;a href=&#34;../mytalks/kn&#34;&gt;Kotlin/Native&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Android KW, Kitchener-Waterloo)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;2017-11-05 &lt;strong&gt;&lt;a href=&#34;../mytalks/gkc2&#34;&gt;Generating Kotlin Code&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon SF, San Francisco)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;2017-11-03 &lt;strong&gt;&lt;a href=&#34;../mytalks/gkc&#34;&gt;Generating Kotlin Code&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Kotlinconf 2017, San Francisco)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;2017-09-25 &lt;strong&gt;&lt;a href=&#34;../mytalks/tros&#34;&gt;The Resurgence of SQL&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon NYC 2017, NYC)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;2016-09-30 &lt;strong&gt;&lt;a href=&#34;../mytalks/eswa&#34;&gt;Embracing SQL Without Abstraction&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon NYC 2016, NYC)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;2016-08-05 &lt;strong&gt;&lt;a href=&#34;../mytalks/ip&#34;&gt;IntelliJ Plugins&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Internal Talk Series, Square)&lt;/em&gt;&lt;/p&gt;
 </description>
             </item>
 

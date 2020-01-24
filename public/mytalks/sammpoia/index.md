@@ -1,6 +1,5 @@
-# 
+# Shipping A Mobile Multiplatform Project on iOS & Android
 
-# SHIPPING A MOBILE MULTIPLATFORM PROJECT ON IOS & ANDROID
 
 _Presented with Ben Asher_
 

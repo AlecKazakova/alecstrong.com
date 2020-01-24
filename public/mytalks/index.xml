@@ -94,17 +94,6 @@ This talk will go over SQLDelight 1.0 - a recent release which has enabled multi
 
     <item>
       <title></title>
-      <link>https://alecstrong.com/mytalks/sammpoia/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-
-      <guid>https://alecstrong.com/mytalks/sammpoia/</guid>
-      <description>SHIPPING A MOBILE MULTIPLATFORM PROJECT ON IOS &amp;amp; ANDROID Presented with Ben Asher
-Getting a multiplatform project started within an active engineering team across multiple platforms is challenging. You have to pitch the project to your colleagues, wrestle with reconciling platform-specific technical issues, and actually ship it for each supported platform.
-We have spent the last year doing just that for PlanGrid and CashApp. Come learn how to get your multiplatform project started and what kinds of problems you can expect to solve along the way.</description>
-    </item>
-
-    <item>
-      <title></title>
       <link>https://alecstrong.com/mytalks/tros/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
 
@@ -122,6 +111,17 @@ SQL may have fallen out of fashion over the last decade, but libraries like SQL 
       <description>What&#39;s the big IDEA? Writing IntelliJ plugins for Kotlin Presented with Egor Andreevich
 With Kotlin having full interop with Java, mixed codebases have become common and effective - but have made writing developer tools more challenging. How do you support multiple languages with a single tool? How do you convert existing plugins from Java to Kotlin and is there a way to avoid having to?
 This talk will cover UAST (Universal Abstract Syntax Tree), an API for working with languages generically.</description>
+    </item>
+
+    <item>
+      <title>Shipping A Mobile Multiplatform Project on iOS &amp; Android</title>
+      <link>https://alecstrong.com/mytalks/sammpoia/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+
+      <guid>https://alecstrong.com/mytalks/sammpoia/</guid>
+      <description>Presented with Ben Asher
+Getting a multiplatform project started within an active engineering team across multiple platforms is challenging. You have to pitch the project to your colleagues, wrestle with reconciling platform-specific technical issues, and actually ship it for each supported platform.
+We have spent the last year doing just that for PlanGrid and CashApp. Come learn how to get your multiplatform project started and what kinds of problems you can expect to solve along the way.</description>
     </item>
 
   </channel>
