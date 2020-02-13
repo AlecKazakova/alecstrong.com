@@ -3,7 +3,35 @@
         <url>
             <loc>https://alecstrong.com/</loc>
 
-                <lastmod>2020-01-24T13:40:16-05:00</lastmod>
+                <lastmod>2020-02-13T13:15:17-05:00</lastmod>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/posts/</loc>
+
+                <lastmod>2020-02-13T13:15:17-05:00</lastmod>
+
+
+                <changefreq>weekly</changefreq>
+
+
+                <priority>0.5</priority>
+
+
+        </url>
+
+        <url>
+            <loc>https://alecstrong.com/2020/02/multiple-dialects/</loc>
+
+                <lastmod>2020-02-13T13:15:17-05:00</lastmod>
 
 
                 <changefreq>weekly</changefreq>
@@ -46,20 +74,6 @@
             <loc>https://alecstrong.com/mytalks/</loc>
 
                 <lastmod>2020-01-24T10:03:37-05:00</lastmod>
-
-
-                <changefreq>weekly</changefreq>
-
-
-                <priority>0.5</priority>
-
-
-        </url>
-
-        <url>
-            <loc>https://alecstrong.com/posts/</loc>
-
-                <lastmod>2020-01-24T11:43:00-05:00</lastmod>
 
 
                 <changefreq>weekly</changefreq>

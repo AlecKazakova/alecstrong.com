@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Supporting Multiple Dialects in SQLDelight | AlecStrong</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noodp" />
+<meta name="Description" content="">
+<link rel="prev" href="https://alecstrong.com/2020/01/github-actions-mpp/" />
+<link rel="canonical" href="https://alecstrong.com/2020/02/multiple-dialects/" />
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Supporting Multiple Dialects in SQLDelight"/>
+<meta name="twitter:description" content="With SQLDelight 1.3.0 and above we now support multiple dialects of SQL (at time of writing: SQLite 3.18, SQLite 3.24, and MySQL). They&#39;re not complete implementations of any of those dialects but they support necessary features and the real meat of the release is a straightforward framework for adding parts of the dialects incrementally. For example SQLite 3.24 is just SQLite 3.18 with upsert on top (thank you Angus Holder!)."/>
+<script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Supporting Multiple Dialects in SQLDelight",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https:\/\/alecstrong.com\/2020\/02\/multiple-dialects\/"
+    },
+
+    "genre": "posts",
+
+    "wordcount":  1562 ,
+    "url": "https:\/\/alecstrong.com\/2020\/02\/multiple-dialects\/",
+
+        "datePublished": "2020-02-13T13:15:17-05:00",
+
+
+        "dateModified": "2020-02-13T13:15:17-05:00",
+
+
+        "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
+
+
+
+    "description": ""
+    }
+    </script>
+<link rel="stylesheet" href="/css/style.min.css">
+<link rel="stylesheet" href="/css/lib/fontawesome-free/all.min.min.css">
+
+<link rel="stylesheet" href="/css/lib/animate/animate.min.min.css">
+
+    </head>
+    <body>
+        <script>
+            window.isDark = (window.localStorage && window.localStorage.getItem('theme')) === 'dark';
+            window.isDark && document.body.classList.add('dark-theme');
+        </script>
+        <div class="wrapper">
+            <nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-header animated bounceIn">
+            <a href="https://alecstrong.com/">AlecStrong</a>
+        </div>
+        <div class="navbar-menu">
+
+
+                <a class="menu-item" href="https://alecstrong.com/posts" title="">Posts</a>
+
+                <a class="menu-item" href="https://alecstrong.com/talks" title="">Talks</a>
+
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile">
+     <div class="navbar-container">
+        <div class="navbar-header">
+            <div class="navbar-header-title animated bounceIn">
+                <a href="https://alecstrong.com/">AlecStrong</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="navbar-menu" id="mobile-menu">
+
+
+                <a class="menu-item" href="https://alecstrong.com/posts" title="">Posts</a>
+
+                <a class="menu-item" href="https://alecstrong.com/talks" title="">Talks</a>
+
+            <a href="javascript:void(0);" class="theme-switch"><i class="fas fa-adjust fa-rotate-180 fa-fw"></i></a>
+        </div>
+    </div>
+</nav><main class="main">
+                <div class="container">
+
+
+
+
+
+    <article class="post-warp">
+        <h1 class="post-title animated flipInX">Supporting Multiple Dialects in SQLDelight</h1>
+
+        <div class="post-meta">
+            <div class="post-meta-main">
+                <a class="author" href="https://alecstrong.com/" rel="author"><i class="fas fa-user-circle fa-fw"></i>Alec Strong&nbsp;</a>
+
+            </div>
+            <div class="post-meta-other">
+                <i class="far fa-calendar-alt fa-fw"></i><time datetime=2020-02-13>2020-02-13</time>&nbsp;
+                <i class="fas fa-pencil-alt fa-fw"></i>about 1562 words&nbsp;
+                <i class="far fa-clock fa-fw"></i>8 min&nbsp;</div>
+        </div>
+
+
+
+
+
+        <div class="post-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <p>With SQLDelight 1.3.0 and above we now support multiple dialects of SQL (at
+time of writing: SQLite 3.18, SQLite 3.24, and MySQL). They're not complete implementations of any of
+those dialects but they support necessary features and the real meat of the release is a straightforward
+framework for adding parts of the dialects incrementally. For example SQLite 3.24 is just SQLite 3.18 with upsert
+on top (thank you <a href="https://github.com/angusholder">Angus Holder</a>!).</p>
+<p>In this post I'm going to go over how it's all possible. I'll start by introducing Grammar-Kit from JetBrains
+as the underlying tool for it and then I'll talk about how I abuse it to accomplish composable parsing.</p>
+<hr>
+<a class="post-dummy-target" id="grammar-kit"></a><h2>Grammar Kit</h2>
+<p>SQLDelight is a compiler, so it relies heavily on a lexer which takes text and turns it into tokens, and a parser
+which takes those tokens and turns it into a tree of rules (abstract syntax tree or AST). ASTs become the API
+that your compiler or any other tools use to interact with source code. This is how IntelliJ works, but it requires
+strict adherence to its own AST interface called PSI. JetBrains definitely has extremely comprehensive parsers for
+all kinds of SQL dialects which product PSI, but since DataGrip is proprietary it's all closed source and I have to
+write my own.</p>
+<p>For one SQL dialect it's manageable. There's an open source <a href="https://github.com/bkiers/sqlite-parser">ANTLR Grammar</a> which
+is what most modern SQLite compilers i know of are using. There's also a tool for going between <a href="https://github.com/antlr/antlr4-intellij-adaptor">ANTLR's AST and PSI</a>, enabling
+IntelliJ. This was what the first version of SQLDelight did and it worked fine, but managing two separate ASTs was awful.</p>
+<p>JetBrains has their own parser generator called <a href="https://github.com/JetBrains/Grammar-Kit">Grammar Kit</a>
+which outputs its AST as PSI, which is fantastic if you're maintaining an IntelliJ plugin in addition to your
+compiler. The only issue is that the PSI runtime is deeply embedded in IntelliJ and so running it outside of
+IntelliJ is challenging. The SQLDelight compiler effectively runs headless IntelliJ which is also awful, but I've
+since appreciated that it is less awful than maintaining two ASTs. If you've wondered why the SQLDelight gradle plugin
+binary is 50mb - this is why. It's kind of running IntelliJ.</p>
+<a class="post-dummy-target" id="the-grammar"></a><h3>The Grammar</h3>
+<p>To power Grammar Kit we need a compatible grammar in BNF format, which didn't exist at the time (~2 years ago). Back then SQLite published
+a <a href="https://www.sqlite.org/docsrc/doc/trunk/art/syntax/all-bnf.html">bnf</a> that has since been taken down because it wasn't being maintained.
+It was really the only starting point so I wrote a <a href="https://github.com/AlecStrong/sqlite-bnf">python script</a> that reads from that site
+and outputs a Grammar Kit compatible <code>.bnf</code>.</p>
+<p>BNF grammar's are pretty straightforward, its a list of rules and definitions for those rules. As an example here's
+what a simplified column rule would look like in BNF</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">column_def ::= column_name type_name (column_constraint)*
+</code></pre></td></tr></table>
+</div>
+</div><p>A name, a type, and a list of constraints. There's a ton of rules in addition to this one but we'll roll with it to illustrate
+how multiple dialects come in. Here's the definition of the <code>column_type</code> rule.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">type_name ::= &#39;REAL&#39; | &#39;INTEGER&#39; | &#39;TEXT&#39; | &#39;BLOB&#39;
+</code></pre></td></tr></table>
+</div>
+</div><p>This is SQLite specific, though not truthfully since SQLite lets you write anything for the column type. We intentionally
+restrict it down because it's <a href="https://www.sqlite.org/datatype3.html">less confusing</a>. Works great for SQLite but now we wan't
+to support MySQL so this doesn't work.</p>
+<a class="post-dummy-target" id="external-rules"></a><h3>External rules</h3>
+<p>The high level premise of how we'll accomplish this is that when we go to parse the <code>column_type</code> rule, depending on the dialect we're in
+we'll use a different definition. Grammar Kit wants to generate super deterministic code and wants all the rules in the same file, but you can
+cheat the system by providing an &ldquo;external&rdquo; rule. An external rule is one that you are providing <em>in code</em> instead of in the grammar, and they look like this.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">column_def ::= column_name &lt;&lt;typeNameExt&gt;&gt; (column_constraint)*
+</code></pre></td></tr></table>
+</div>
+</div><p>As long as there's a static function named <code>typeNameExt</code>, that's what will be invoked for that step of parsing. Here's what
+that static function looks like:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@JvmStatic</span>
+<span class="k">fun</span> <span class="nf">typeNameExt</span><span class="p">(</span>
+  <span class="n">builder</span><span class="p">:</span> <span class="n">PsiBuilder</span><span class="p">,</span>
+  <span class="n">level</span><span class="p">:</span> <span class="n">Int</span>
+<span class="p">)</span><span class="p">:</span> <span class="n">Boolean</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>In order to support different implementations of this rule, we have a single static field for the parser to use:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">object</span> <span class="nc">SqlParserUtil</span> <span class="p">{</span>
+  <span class="k">var</span> <span class="py">type_name</span><span class="p">:</span> <span class="n">GeneratedParserUtilBase</span><span class="p">.</span><span class="n">Parser</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+
+  <span class="n">@JvmStatic</span>
+  <span class="k">fun</span> <span class="nf">typeNameExt</span><span class="p">(</span>
+    <span class="n">builder</span><span class="p">:</span> <span class="n">PsiBuilder</span><span class="p">,</span>
+    <span class="n">level</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span>
+    <span class="n">type_name</span><span class="p">:</span> <span class="n">GeneratedParserUtilBase</span><span class="p">.</span><span class="n">Parser</span>
+  <span class="p">)</span><span class="p">:</span> <span class="n">Boolean</span> <span class="p">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">type_name</span> <span class="o">?:</span> <span class="n">type_name</span><span class="p">)</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Notice too that we've added a parameter <code>type_name</code> to the static function; it's actually the original rule that we might be overriding
+if someone sets the static <code>type_name</code> variable. Grammar Kit external rules can actually be <em>passed</em> another rule within the grammar, which looks
+like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">column_def ::= column_name &lt;&lt;typeNameExt type_name&gt;&gt; (column_constraint)*
+
+type_name ::= identifier // ANSI SQL lets you write anything for the type
+</code></pre></td></tr></table>
+</div>
+</div><p>Lets recap: when the generater parser goes to parse the <code>column_def</code> rule, it will first parse <code>column_name</code> normally,
+then it will parse <code>type_name</code> by calling <code>typeNameExt</code> (code I wrote), passing it the original rule <code>type_name</code>, and then in
+my code I will invoke the original rule or an override if one was set.</p>
+<p>This means in a separate bnf file I can create the MySQL rule:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">type_name ::= VARCHAR | INTEGER | VARBINARY
+</code></pre></td></tr></table>
+</div>
+</div><p>Which generates its own <code>MySQLParser</code>, and then at runtime I can override the rule:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">SqlParserUtil</span><span class="p">.</span><span class="n">type_name</span> <span class="p">=</span> <span class="n">MySQLParser</span><span class="p">.</span><span class="n">type_name</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Wow! Now everything works.</p>
+<p>No</p>
+<a class="post-dummy-target" id="shaping-the-ast"></a><h3>Shaping the AST</h3>
+<p>The problem with this approach is that the AST we're given won't actually have a method on it for the type_name, since it doesn't know what to expect.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">ColumnDef</span> <span class="p">{</span>
+  <span class="k">fun</span> <span class="nf">getColumnName</span><span class="p">(</span><span class="p">)</span><span class="p">:</span> <span class="n">ColumnName</span>
+
+  <span class="k">fun</span> <span class="nf">getColumnConstraints</span><span class="p">(</span><span class="p">)</span><span class="p">:</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ColumnConstraint</span><span class="p">&gt;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Notice there's no type name. This is a problem since now we're losing the type safety we cared about in the first place. Alright back to the grammar&hellip;</p>
+<p>We can actually instruct a rule to take the shape of a different rule if we tell it to, using a Grammar Kit attribute called <code>elementType</code>. It looks like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">fake column_def ::= column_name type_name (column_constraint)*
+
+column_def_real ::= column_name &lt;&lt;typeNameExt type_name&gt;&gt; (column_constraint)* {
+  elementType = column_def
+}
+</code></pre></td></tr></table>
+</div>
+</div><p>What happens here is that when we parse the <code>column_def_real</code> rule, it will put the resulting element in the type for the <code>column_def</code> rule. We
+mark the <code>column_def</code> rule as <code>fake</code> so that we don't actually generate a parser for it. It's not actually being used as a rule so we don't need
+to generate any parsing code for it.</p>
+<p>So here's the type we end up getting when the <code>column_def_real</code> rule is parsed:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">ColumnDef</span> <span class="p">{</span>
+  <span class="k">fun</span> <span class="nf">getColumnName</span><span class="p">(</span><span class="p">)</span><span class="p">:</span> <span class="n">ColumnName</span>
+
+  <span class="k">fun</span> <span class="nf">getTypeName</span><span class="p">(</span><span class="p">)</span><span class="p">:</span> <span class="n">TypeName</span>
+
+  <span class="k">fun</span> <span class="nf">getColumnConstraints</span><span class="p">(</span><span class="p">)</span><span class="p">:</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ColumnConstraint</span><span class="p">&gt;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>This is what we want!</p>
+<a class="post-dummy-target" id="what-about-those-other-rules"></a><h3>What about those other rules!</h3>
+<p>Yea good question. The hypothesis here is that I can apply this strategy to each rule and have a completely composable grammar, which future
+proofs me for other SQL dialects or features within a dialect. So lets just do that! Here's the grammar for that rule:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">fake column_def ::= column_name type_name (column_constraint)*
+
+column_def_real ::= &lt;&lt;columnNameExt column_name_real&gt;&gt; &lt;&lt;typeNameExt type_name_real&gt;&gt; (&lt;&lt;columnConstraintExt column_constraint_real&gt;&gt;)* {
+  elementType = column_def
+}
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">object</span> <span class="nc">SqlParserUtil</span> <span class="p">{</span>
+  <span class="k">var</span> <span class="py">column_name</span><span class="p">:</span> <span class="n">GeneratedParserUtilBase</span><span class="p">.</span><span class="n">Parser</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+  <span class="k">var</span> <span class="py">type_name</span><span class="p">:</span> <span class="n">GeneratedParserUtilBase</span><span class="p">.</span><span class="n">Parser</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+  <span class="k">var</span> <span class="py">column_constraint</span><span class="p">:</span> <span class="n">GeneratedParserUtilBase</span><span class="p">.</span><span class="n">Parser</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+
+  <span class="n">@JvmStatic</span>
+  <span class="k">fun</span> <span class="nf">columnNameExt</span><span class="p">(</span>
+    <span class="n">builder</span><span class="p">:</span> <span class="n">PsiBuilder</span><span class="p">,</span>
+    <span class="n">level</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span>
+    <span class="n">column_name</span><span class="p">:</span> <span class="n">GeneratedParserUtilBase</span><span class="p">.</span><span class="n">Parser</span>
+  <span class="p">)</span><span class="p">:</span> <span class="n">Boolean</span> <span class="p">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">column_name</span> <span class="o">?:</span> <span class="n">column_name</span><span class="p">)</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+
+  <span class="n">@JvmStatic</span>
+  <span class="k">fun</span> <span class="nf">typeNameExt</span><span class="p">(</span>
+    <span class="n">builder</span><span class="p">:</span> <span class="n">PsiBuilder</span><span class="p">,</span>
+    <span class="n">level</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span>
+    <span class="n">type_name</span><span class="p">:</span> <span class="n">GeneratedParserUtilBase</span><span class="p">.</span><span class="n">Parser</span>
+  <span class="p">)</span><span class="p">:</span> <span class="n">Boolean</span> <span class="p">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">type_name</span> <span class="o">?:</span> <span class="n">type_name</span><span class="p">)</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+
+  <span class="n">@JvmStatic</span>
+  <span class="k">fun</span> <span class="nf">columnConstraintExt</span><span class="p">(</span>
+    <span class="n">builder</span><span class="p">:</span> <span class="n">PsiBuilder</span><span class="p">,</span>
+    <span class="n">level</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span>
+    <span class="n">column_constraint</span><span class="p">:</span> <span class="n">GeneratedParserUtilBase</span><span class="p">.</span><span class="n">Parser</span>
+  <span class="p">)</span><span class="p">:</span> <span class="n">Boolean</span> <span class="p">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">column_constraint</span> <span class="o">?:</span> <span class="n">column_constraint</span><span class="p">)</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Great, and now we'll just repeat this for all the SQL rules!</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">create_trigger ::= CREATE [ TEMP | TEMPORARY ] TRIGGER [ IF NOT EXISTS ] [ database_name &#39;.&#39; ] trigger_name [ BEFORE | AFTER | INSTEAD OF ] ( DELETE | INSERT | UPDATE [ OF column_name ( &#39;,&#39; column_name ) * ] ) ON table_name [ FOR EACH ROW ] [ WHEN expr ] BEGIN ( (update_stmt | insert_stmt | delete_stmt | compound_select_stmt ) &#39;;&#39; ) + END
+</code></pre></td></tr></table>
+</div>
+</div><p>😱</p>
+<p>Not happening. Thankfully this is a great opportunity for some codegen, so I wrote <a href="https://github.com/AlecStrong/Grammar-Kit-Composer">Grammar Kit Composer</a>
+to do all the heavy lifting for you. You just write your Grammar Kit grammars normally:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">column_def ::= column_name type_name (column_constraint)*
+</code></pre></td></tr></table>
+</div>
+</div><p>Apply the gradle plugin:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">buildscript</span> <span class="o">{</span>
+  <span class="n">dependencies</span> <span class="o">{</span>
+    <span class="n">classpath</span> <span class="s2">&#34;com.alecstrong:grammar-kit-composer:0.1.3&#34;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s2">&#34;com.alecstrong.grammar.kit.composer&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>And then running <code>build</code> will first generate the composable grammar, then the parser util, then the normal Grammar Kit outputs (your PSI tree and the parser).</p>
+<a class="post-dummy-target" id="grammar-kit-composer"></a><h2>Grammar Kit Composer</h2>
+<p>Grammar Kit Composer lets you indicate what parser you're overriding and then referencing rules or overriding rules:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">//MySQL.bnf
+{
+  overrides=&#34;com.alecstrong.sql.psi.core.SqlParser&#34;
+}
+type_name ::= VARCHAR | INTEGER | VARBINARY {
+  overrides=true
+}
+</code></pre></td></tr></table>
+</div>
+</div><p>Then the generated parserUtil comes with a setup method:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">MySQLParserUtil</span><span class="p">.</span><span class="n">overrideSqlParser</span><span class="p">(</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><a class="post-dummy-target" id="sql-psi"></a><h3>sql-psi</h3>
+<p>SQLDelight is all about codegen, not actually parsing sql or all this composable grammar nonsense, so that all lives in a separate repo
+<a href="https://github.com/AlecStrong/sql-psi">sql-psi</a>. If you're interested in seeing more dialects or language features supported downstream in
+SQLDelight, sql-psi is where it needs to happen.</p>
+
+        </div>
+
+        <div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>This article is updated with 2020-02-13</span>
+            </div>
+            <div class="post-info-license">
+
+            </div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md">
+
+
+                        <span><a class="link-to-markdown" href="https://alecstrong.com/2020/02/multiple-dialects/index.md" target="_blank"></a></span>
+
+
+            </div>
+            <div class="post-info-share">
+
+                    <span>
+
+        <a href="//twitter.com/share?url=https%3a%2f%2falecstrong.com%2f2020%2f02%2fmultiple-dialects%2f&amp;text=Supporting%20Multiple%20Dialects%20in%20SQLDelight&amp;via=Strongolopolis" target="_blank" title="Share on Twitter">
+            <i class="fab fa-twitter fa-fw"></i>
+        </a>
+
+
+
+        <a href="//reddit.com/submit?url=https%3a%2f%2falecstrong.com%2f2020%2f02%2fmultiple-dialects%2f&amp;title=Supporting%20Multiple%20Dialects%20in%20SQLDelight" target="_blank" title="Share on Reddit">
+            <i class="fab fa-reddit fa-fw"></i>
+        </a>
+
+
+
+
+
+
+
+
+</span>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section>
+
+        </section>
+        <section>
+            <span><a href="javascript:window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="https://alecstrong.com/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+
+            <a href="https://alecstrong.com/2020/01/github-actions-mpp/" class="prev" rel="prev" title="Integrating Github Actions for Kotlin Multiplatform"><i class="fas fa-angle-left fa-fw"></i>Integrating Github Actions for Kotlin Multiplatform</a>
+
+
+    </div>
+</div>
+
+        <div class="post-comment">
+
+
+
+
+        </div>
+    </article></div>
+            </main>
+            <footer class="footer">
+    <div class="copyright">
+        <div class="copyright-line">
+            Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreffer">Hugo</a>&nbsp;|&nbsp;Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="external nofollow noopener noreffer">LoveIt<i class="far fa-heart fa-fw"></i></a>
+        </div>
+        <div class="copyright-line">
+            <i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://alecstrong.com/">Alec Strong</a></span><span class="license">&nbsp;|&nbsp;<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/lib/jquery/jquery.slim.min.min.js"></script>
+<script src="/js/lib/lazysizes/lazysizes.min.min.js"></script>
+<script src="/js/lib/smooth-scroll/smooth-scroll.polyfills.min.min.js"></script><script>window.scroll = new SmoothScroll('[data-scroll]', {speed: 300, speedAsDuration: true});</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/blog.min.js"></script>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-156931611-1', 'auto');
+	ga('set', 'anonymizeIp', true);
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</div>
+        <a href="#" class="dynamic-to-top" id="dynamic-to-top" data-scroll><span>&nbsp;</span></a>
+    </body>
+</html>
