@@ -37,7 +37,7 @@
         "datePublished": "2020-02-13T13:15:17-05:00",
 
 
-        "dateModified": "2020-02-13T13:15:17-05:00",
+        "dateModified": "2020-02-13T14:32:20-05:00",
 
 
         "license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.",
@@ -159,10 +159,10 @@ as the underlying tool for it and then I'll talk about how I abuse it to accompl
 which takes those tokens and turns it into a tree of rules (abstract syntax tree or AST). ASTs become the API
 that your compiler or any other tools use to interact with source code. This is how IntelliJ works, but it requires
 strict adherence to its own AST interface called PSI. JetBrains definitely has extremely comprehensive parsers for
-all kinds of SQL dialects which product PSI, but since DataGrip is proprietary it's all closed source and I have to
+all kinds of SQL dialects which produce PSI, but since DataGrip is proprietary it's all closed source and I have to
 write my own.</p>
 <p>For one SQL dialect it's manageable. There's an open source <a href="https://github.com/bkiers/sqlite-parser">ANTLR Grammar</a> which
-is what most modern SQLite compilers i know of are using. There's also a tool for going between <a href="https://github.com/antlr/antlr4-intellij-adaptor">ANTLR's AST and PSI</a>, enabling
+is what most modern SQLite compilers I know of are using. There's also a tool for going between <a href="https://github.com/antlr/antlr4-intellij-adaptor">ANTLR's AST and PSI</a>, enabling
 IntelliJ. This was what the first version of SQLDelight did and it worked fine, but managing two separate ASTs was awful.</p>
 <p>JetBrains has their own parser generator called <a href="https://github.com/JetBrains/Grammar-Kit">Grammar Kit</a>
 which outputs its AST as PSI, which is fantastic if you're maintaining an IntelliJ plugin in addition to your
@@ -186,7 +186,7 @@ what a simplified column rule would look like in BNF</p>
 </code></pre></td></tr></table>
 </div>
 </div><p>A name, a type, and a list of constraints. There's a ton of rules in addition to this one but we'll roll with it to illustrate
-how multiple dialects come in. Here's the definition of the <code>column_type</code> rule.</p>
+how multiple dialects come in. Here's the definition of the <code>type_name</code> rule.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -199,7 +199,7 @@ how multiple dialects come in. Here's the definition of the <code>column_type</c
 restrict it down because it's <a href="https://www.sqlite.org/datatype3.html">less confusing</a>. Works great for SQLite but now we wan't
 to support MySQL so this doesn't work.</p>
 <a class="post-dummy-target" id="external-rules"></a><h3>External rules</h3>
-<p>The high level premise of how we'll accomplish this is that when we go to parse the <code>column_type</code> rule, depending on the dialect we're in
+<p>The high level premise of how we'll accomplish this is that when we go to parse the <code>type_name</code> rule, depending on the dialect we're in
 we'll use a different definition. Grammar Kit wants to generate super deterministic code and wants all the rules in the same file, but you can
 cheat the system by providing an &ldquo;external&rdquo; rule. An external rule is one that you are providing <em>in code</em> instead of in the grammar, and they look like this.</p>
 <div class="highlight"><div class="chroma">

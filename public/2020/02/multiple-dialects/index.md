@@ -18,11 +18,11 @@ SQLDelight is a compiler, so it relies heavily on a lexer which takes text and t
 which takes those tokens and turns it into a tree of rules (abstract syntax tree or AST). ASTs become the API
 that your compiler or any other tools use to interact with source code. This is how IntelliJ works, but it requires
 strict adherence to its own AST interface called PSI. JetBrains definitely has extremely comprehensive parsers for
-all kinds of SQL dialects which product PSI, but since DataGrip is proprietary it's all closed source and I have to
+all kinds of SQL dialects which produce PSI, but since DataGrip is proprietary it's all closed source and I have to
 write my own.
 
 For one SQL dialect it's manageable. There's an open source [ANTLR Grammar](https://github.com/bkiers/sqlite-parser) which
-is what most modern SQLite compilers i know of are using. There's also a tool for going between [ANTLR's AST and PSI](https://github.com/antlr/antlr4-intellij-adaptor), enabling
+is what most modern SQLite compilers I know of are using. There's also a tool for going between [ANTLR's AST and PSI](https://github.com/antlr/antlr4-intellij-adaptor), enabling
 IntelliJ. This was what the first version of SQLDelight did and it worked fine, but managing two separate ASTs was awful.
 
 JetBrains has their own parser generator called [Grammar Kit](https://github.com/JetBrains/Grammar-Kit)
@@ -47,7 +47,7 @@ column_def ::= column_name type_name (column_constraint)*
 ```
 
 A name, a type, and a list of constraints. There's a ton of rules in addition to this one but we'll roll with it to illustrate
-how multiple dialects come in. Here's the definition of the `column_type` rule.
+how multiple dialects come in. Here's the definition of the `type_name` rule.
 
 ```
 type_name ::= 'REAL' | 'INTEGER' | 'TEXT' | 'BLOB'
@@ -59,7 +59,7 @@ to support MySQL so this doesn't work.
 
 ### External rules
 
-The high level premise of how we'll accomplish this is that when we go to parse the `column_type` rule, depending on the dialect we're in
+The high level premise of how we'll accomplish this is that when we go to parse the `type_name` rule, depending on the dialect we're in
 we'll use a different definition. Grammar Kit wants to generate super deterministic code and wants all the rules in the same file, but you can
 cheat the system by providing an "external" rule. An external rule is one that you are providing *in code* instead of in the grammar, and they look like this.
 
