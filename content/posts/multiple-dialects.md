@@ -7,7 +7,7 @@ draft: false
 With SQLDelight 1.3.0 and above we now support multiple dialects of SQL (at
 time of writing: SQLite 3.18, SQLite 3.24, and MySQL). They're not complete implementations of any of
 those dialects but they support necessary features and the real meat of the release is a straightforward
-framework for adding parts of the dialects incrementally. For example SQLite 3.24 is just SQLite 3.18 with upsert
+framework for adding parts of the dialects incrementally. For example, SQLite 3.24 is just SQLite 3.18 with upsert
 on top (thank you [Angus Holder](https://github.com/angusholder)!).
 
 In this post I'm going to go over how it's all possible. I'll start by introducing Grammar-Kit from JetBrains
@@ -17,8 +17,8 @@ as the underlying tool for it and then I'll talk about how I abuse it to accompl
 
 ## Grammar Kit
 
-SQLDelight is a compiler, so it relies heavily on a lexer which takes text and turns it into tokens, and a parser
-which takes those tokens and turns it into a tree of rules (abstract syntax tree or AST). ASTs become the API
+SQLDelight is a compiler, so it relies heavily on a lexer which takes text and turns them into tokens, and a parser
+which takes those tokens and turns them into a tree of rules (abstract syntax tree or AST). ASTs become the API
 that your compiler or any other tools use to interact with source code. This is how IntelliJ works, but it requires
 strict adherence to its own AST interface called PSI. JetBrains definitely has extremely comprehensive parsers for
 all kinds of SQL dialects which produce PSI, but since DataGrip is proprietary it's all closed source and I have to
@@ -42,7 +42,7 @@ a [bnf](https://www.sqlite.org/docsrc/doc/trunk/art/syntax/all-bnf.html) that ha
 It was really the only starting point so I wrote a [python script](https://github.com/AlecStrong/sqlite-bnf) that reads from that site
 and outputs a Grammar Kit compatible `.bnf`. 
 
-BNF grammar's are pretty straightforward, its a list of rules and definitions for those rules. As an example here's
+BNF grammars are pretty straightforward, its a list of rules and definitions for those rules. As an example here's
 what a simplified column rule would look like in BNF
 
 ```
@@ -57,7 +57,7 @@ type_name ::= 'REAL' | 'INTEGER' | 'TEXT' | 'BLOB'
 ```
 
 This is SQLite specific, though not truthfully since SQLite lets you write anything for the column type. We intentionally
-restrict it down because it's [less confusing](https://www.sqlite.org/datatype3.html). Works great for SQLite but now we wan't 
+restrict it down because it's [less confusing](https://www.sqlite.org/datatype3.html). Works great for SQLite but now we want 
 to support MySQL so this doesn't work.
 
 ### External rules
@@ -106,7 +106,7 @@ column_def ::= column_name <<typeNameExt type_name>> (column_constraint)*
 type_name ::= identifier // ANSI SQL lets you write anything for the type
 ```
 
-Lets recap: when the generater parser goes to parse the `column_def` rule, it will first parse `column_name` normally,
+Lets recap: when the generated parser goes to parse the `column_def` rule, it will first parse `column_name` normally,
 then it will parse `type_name` by calling `typeNameExt` (code I wrote), passing it the original rule `type_name`, and then in
 my code I will invoke the original rule or an override if one was set.
 
