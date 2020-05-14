@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 13 Feb 2020 13:15:17 -0500</lastBuildDate>
+    <lastBuildDate>Wed, 13 May 2020 21:31:03 -0400</lastBuildDate>
 
 	<atom:link href="https://alecstrong.com/posts/index.xml" rel="self" type="application/rss+xml" />
 
+
+    <item>
+      <title>SQLite Helper Queries</title>
+      <link>https://alecstrong.com/2020/05/cte/</link>
+      <pubDate>Wed, 13 May 2020 21:31:03 -0400</pubDate>
+
+      <guid>https://alecstrong.com/2020/05/cte/</guid>
+      <description>In programming one of the earliest tools we&#39;re given for simplifying complex code is helper functions. Splitting code into smaller more digestible blocks makes it easier to maintain and read, which is usually more important than code that&#39;s easier to write. In SQL we have tools for accomplishing the same thing! One of the bigger ones is views which can help share an underlying query between multiple other ones. Leandro Favarin wrote a great post on how to put views into practice in SQLite here.</description>
+    </item>
 
     <item>
       <title>Supporting Multiple Dialects in SQLDelight</title>
