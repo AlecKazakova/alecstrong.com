@@ -138,3 +138,4 @@ WHERE word != '';
 Nice! Sometimes you want to be able to `JOIN` a runtime parameter for sqlite, and this is how I do it. Again it has the benefit of running once,
 which can be a lot more performant than writing the query to use `WHERE ___ IN ____` sometimes.
 
+

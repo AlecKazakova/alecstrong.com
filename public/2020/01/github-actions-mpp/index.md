@@ -124,3 +124,4 @@ And thats it! We also have a workflow to [deploy gh-pages with mkdocs](https://g
 and a job which [publishes the IntelliJ plugin](https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Release.yml#L37-L47). With Github Actions
 we've been able to shrink the actual releasing process [pretty dramatically](https://github.com/cashapp/sqldelight/commit/5acee5551bd1c6a19233ed4b32c0c7bb445faff2)
 and I'm looking forward to using it more!
+

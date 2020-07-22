@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Mysterious SQLite bugs and how to solve them. - AlecStrong</title><meta name="Description" content=""><meta property="og:title" content="Mysterious SQLite bugs and how to solve them." />
+<meta property="og:description" content="TLDR: Android 30 upgrades SQLite from 3.22.0 -&gt; 3.28.0, this introduces new alter table behavior which will potentially cause runtime exceptions when ALTER TABLE statements are ran on tables which are used in a view. To preserve old behavior turn on PRAGMA legacy_alter_table=ON before running your migrations.
+ Late last week we experienced a weird bug on Cash App happening to a few of our developers - reproducibly but not for everyone." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://alecstrong.com/posts/sqlite-sdk-30/" />
+<meta property="article:published_time" content="2020-07-22T10:02:11-04:00" />
+<meta property="article:modified_time" content="2020-07-22T11:03:05-04:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mysterious SQLite bugs and how to solve them."/>
+<meta name="twitter:description" content="TLDR: Android 30 upgrades SQLite from 3.22.0 -&gt; 3.28.0, this introduces new alter table behavior which will potentially cause runtime exceptions when ALTER TABLE statements are ran on tables which are used in a view. To preserve old behavior turn on PRAGMA legacy_alter_table=ON before running your migrations.
+ Late last week we experienced a weird bug on Cash App happening to a few of our developers - reproducibly but not for everyone."/>
+<meta name="application-name" content="AlecStrong">
+<meta name="apple-mobile-web-app-title" content="AlecStrong"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://alecstrong.com/posts/sqlite-sdk-30/" /><link rel="prev" href="http://alecstrong.com/posts/cte/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Mysterious SQLite bugs and how to solve them.",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/alecstrong.com\/posts\/sqlite-sdk-30\/"
+        },"genre": "posts","wordcount":  848 ,
+        "url": "http:\/\/alecstrong.com\/posts\/sqlite-sdk-30\/","datePublished": "2020-07-22T10:02:11-04:00","dateModified": "2020-07-22T11:03:05-04:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Alec Strong"},"author": {
+                "@type": "Person",
+                "name": "Alec Strong"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : '' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="AlecStrong">AlecStrong</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/talks/"> Talks </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="AlecStrong">AlecStrong</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/talks/" title="">Talks</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Mysterious SQLite bugs and how to solve them.</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>Alec Strong</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-07-22">2020-07-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;848 words&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;4 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
+            </div><div class="content" id="content"><p>TLDR: Android 30 upgrades SQLite from 3.22.0 -&gt; 3.28.0, this introduces new alter table
+behavior which will potentially cause runtime exceptions when <code>ALTER TABLE</code> statements are ran on
+tables which are used in a view. To preserve old behavior turn on <code>PRAGMA legacy_alter_table=ON</code>
+before running your migrations.</p>
+<hr>
+<p>Late last week we experienced a weird bug on Cash App happening to a few of our developers -
+reproducibly but not for everyone. The crash pointed to something happening in our SQLite migrations:</p>
+<pre><code>Caused by: android.database.sqlite.SQLiteException: error in view activityRecipient: no such table: main.instrumentLinkingConfig (code 1 SQLITE_ERROR)
+        at android.database.sqlite.SQLiteConnection.nativeExecute(SQLiteConnection.java:-2)
+        at android.database.sqlite.SQLiteConnection.execute(SQLiteConnection.java:707)
+        at android.database.sqlite.SQLiteSession.execute(SQLiteSession.java:621)
+        at android.database.sqlite.SQLiteStatement.execute(SQLiteStatement.java:46)
+        at com.squareup.sqldelight.android.AndroidPreparedStatement.execute(AndroidSqliteDriver.kt:2)
+        at com.squareup.sqldelight.android.AndroidSqliteDriver$execute$2.invoke(AndroidSqliteDriver.kt:2)
+        at com.squareup.sqldelight.android.AndroidSqliteDriver.execute(AndroidSqliteDriver.kt:4)
+        at com.squareup.sqldelight.android.AndroidSqliteDriver.execute(AndroidSqliteDriver.kt:10)
+        at com.squareup.scannerview.R$layout.execute$default(Unknown:1)
+        at com.squareup.cash.db.db.CashDatabaseImpl$Schema.migrate(CashDatabaseImpl.kt:819)
+</code></pre><p>We use SQLDelight's migration verification so getting a runtime error is a bad look, but even worse
+this stacktrace is incorrect. This line is a dead giveaway:</p>
+<pre><code>at com.squareup.scannerview.R$layout.execute$default(Unknown:1)
+</code></pre><p>Nothing in our generated SQLDelight code is referencing that class so something is clearly wrong
+here. The line in <code>CashDatabaseImpl$Schema</code> is also incorrect, which is even worse because it means
+we don't know which line of code is crashing. There's no obvious way to understand what's going on
+unless you already know what's going on, so here's what's going on: bytecode optimizers break
+stacktraces because they're changing the names and locations of symbols. A great example is an
+optimizer that inlines code - it's moving the code around to a new location, when it does crash its crashing in bytecode
+that doesn't decompile to source code. To solve this optimizers give you a mapping file which tells
+other tools how to go from a stack frame for the compiled code to one which accurately reflects your
+source code.</p>
+<p>The conditions for having one of these mangled stack traces are pretty rare. The crash needs to come
+from an optimized app - for development we don't optimize Cash App so local stack traces are never
+obfuscated. For our internal and production releases the mapping file gets uploaded automatically
+to bugsnag using the <a href="https://github.com/bugsnag/bugsnag-android-gradle-plugin" target="_blank" rel="noopener noreffer">gradle plugin</a> and
+any crash reporter will have a similar tool. Unfortunately there's an <a href="https://github.com/bugsnag/bugsnag-android-gradle-plugin/issues/199" target="_blank" rel="noopener noreffer">issue</a>
+causing some of our mapping files to not upload, which is how we wound up with this obfuscated stack trace.</p>
+<p>There's no obvious way to tell if your stack trace is incorrect other than manually checking to see
+if it looks better mapped. We can map the stacktrace using
+<a href="https://www.guardsquare.com/en/products/proguard/manual/retrace" target="_blank" rel="noopener noreffer">ReTrace</a> which is a tool part of
+ProGuard to retrieve the original stacktrace based on an obfuscated one + the mapping file. You can
+generate the mapping.txt file by assembling the obfuscated app and grabbing the mapping file from
+<code>build/outputs/mapping</code>. Once we use this we get a better stacktrace:</p>
+<pre><code>com.squareup.cash.db.db.CashDatabaseImpl$Schema.migrate(CashDatabaseImpl.java:7600)
+</code></pre><p>And looking at that line of code we see:</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="n">driver</span><span class="p">.</span><span class="k">execute</span><span class="p">(</span><span class="k">null</span><span class="p">,</span>
+            <span class="s2">&#34;</span><span class="s2">ALTER TABLE newInstrumentLinkingConfig RENAME TO instrumentLinkingConfig</span><span class="s2">&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div><p>Which given the original error message is pretty confusing:</p>
+<pre><code>error in view activityRecipient: no such table: main.instrumentLinkingConfig
+</code></pre><p>Given it's working for some of us and not working for others, my hunch was that it was dependent
+on the version of SQLite we were on, so I checked the
+<a href="https://stackoverflow.com/questions/2421189/version-of-sqlite-used-in-android" target="_blank" rel="noopener noreffer">versions of SQLite on Android</a>
+and found that SDK 30 introduced a pretty big version bump for SQLite. Next was to check the
+<a href="https://www.sqlite.org/changes.html#version_3_28_0" target="_blank" rel="noopener noreffer">SQLite Releases</a> for anything that references
+&ldquo;View&rdquo; (literally did a cmd+f of &ldquo;View&rdquo; on that page) and found this:</p>
+<pre><code>2018-09-15 (3.25.0)
+2. Enhancements the ALTER TABLE command:
+   a. Add support for renaming columns within a table using ALTER TABLE table RENAME COLUMN oldname TO newname.
+   b. Fix table rename feature so that it also updates references to the renamed table in triggers and views.
+</code></pre><p>2b) is the one we care about. When SQLite does an ALTER TABLE command as of version 3.25.0, it finds
+references to that table in VIEWS/TRIGGERS and updates them. The problem in our case was that our
+migration file looked like this:</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">instrumentLinkingConfig</span><span class="p">;</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">newInstrumentLinkingConfig</span> <span class="k">RENAME</span> <span class="k">TO</span> <span class="n">instrumentLinkingConfig</span><span class="p">;</span>
+</code></pre></div><p>So when it went to go look at views during the <code>ALTER TABLE</code> statement, it would find ones
+that reference the (now non-existent) <code>instrumentLinkingConfig</code>, and throw an error.</p>
+<p>This is only really an issue because with Android source code you're targeting multiple versions
+of SQLite (depending on the OS version), if you ship unbundled SQLite (like the
+<a href="https://github.com/requery/sqlite-android" target="_blank" rel="noopener noreffer">requery one</a>) what you should really be doing is using
+the <code>ALTER TABLE ADD COLUMN</code> support which was added in the same SQLite version to avoid doing the
+<code>DROP TABLE old/ALTER TABLE new RENAME TO old</code> dance we had to do on old SQLite for adding a column.
+This would avoid issues around temporarily invalid views. For those of us still using the bundled
+SQLite in android, the workaround is to enable the PRAGMA added in <code>3.25.2</code>:
+<code>PRAGMA legacy_alter_table=ON</code>.</p>
+<p>On Android we're pretty used to testing on a different SDK to reproduce UI bugs and glitches, really
+the only recommendation here is to do the same for SQLite issues unless you're shipping unbundled.
+Outside of that do a thorough read of the release notes, and always double check your tools to make
+sure they're not giving you red herrings.</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2020-07-22&nbsp;<a class="git-hash" href="https://github.com/alecstrong/alecstrong.com/commit/ff76de78e9c0495dee6e400009f15d9269086efc" target="_blank" title="commit by Alec Strong(astrong@squareup.com) ff76de78e9c0495dee6e400009f15d9269086efc: New post on debugging sqlite">
+                                    <i class="fas fa-hashtag fa-fw"></i>ff76de7</a></span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/cte/" class="prev" rel="prev" title="SQLite Helper Queries"><i class="fas fa-angle-left fa-fw"></i>SQLite Helper Queries</a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.62.2">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Alec Strong</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

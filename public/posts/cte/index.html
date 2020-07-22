@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>SQLite Helper Queries - AlecStrong</title><meta name="Description" content=""><meta property="og:title" content="SQLite Helper Queries" />
+<meta property="og:description" content="In programming one of the earliest tools we&#39;re given for simplifying complex code is helper functions. Splitting code into smaller more digestible blocks makes it easier to maintain and read, which is usually more important than code that&#39;s easier to write. In SQL we have tools for accomplishing the same thing! One of the bigger ones is views which can help share an underlying query between multiple other ones. Leandro Favarin wrote a great post on how to put views into practice in SQLite here." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://alecstrong.com/posts/cte/" />
+<meta property="article:published_time" content="2020-05-13T21:31:03-04:00" />
+<meta property="article:modified_time" content="2020-05-13T22:37:05-04:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="SQLite Helper Queries"/>
+<meta name="twitter:description" content="In programming one of the earliest tools we&#39;re given for simplifying complex code is helper functions. Splitting code into smaller more digestible blocks makes it easier to maintain and read, which is usually more important than code that&#39;s easier to write. In SQL we have tools for accomplishing the same thing! One of the bigger ones is views which can help share an underlying query between multiple other ones. Leandro Favarin wrote a great post on how to put views into practice in SQLite here."/>
+<meta name="application-name" content="AlecStrong">
+<meta name="apple-mobile-web-app-title" content="AlecStrong"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://alecstrong.com/posts/cte/" /><link rel="prev" href="http://alecstrong.com/posts/multiple-dialects/" /><link rel="next" href="http://alecstrong.com/posts/sqlite-sdk-30/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "SQLite Helper Queries",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/alecstrong.com\/posts\/cte\/"
+        },"genre": "posts","wordcount":  733 ,
+        "url": "http:\/\/alecstrong.com\/posts\/cte\/","datePublished": "2020-05-13T21:31:03-04:00","dateModified": "2020-05-13T22:37:05-04:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Alec Strong"},"author": {
+                "@type": "Person",
+                "name": "Alec Strong"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : '' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="AlecStrong">AlecStrong</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/talks/"> Talks </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="AlecStrong">AlecStrong</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/talks/" title="">Talks</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">SQLite Helper Queries</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>Alec Strong</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-05-13">2020-05-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;733 words&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;4 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents"></nav></div>
+            </div><div class="content" id="content"><p>In programming one of the earliest tools we're given for simplifying complex code is helper functions.
+Splitting code into smaller more digestible blocks makes it easier to maintain and read, which is
+usually more important than code that's easier to write. In SQL we have tools for accomplishing
+the same thing! One of the bigger ones is views which
+can help share an underlying query between multiple other ones. Leandro Favarin wrote a great
+post on how to put views into practice in SQLite <a href="https://leandrofavarin.com/sqldelight-powerful-codegen" target="_blank" rel="noopener noreffer">here</a>.</p>
+<p>Another strategy for simplifying a query is common table expressions. Take for example a query like this:</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">album</span>
+<span class="k">WHERE</span> <span class="n">year_of_release</span> <span class="o">=</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="k">max</span><span class="p">(</span><span class="n">year_of_release</span><span class="p">)</span>
+  <span class="k">FROM</span> <span class="n">album</span> <span class="k">AS</span> <span class="n">artistAlbum</span>
+  <span class="k">WHERE</span> <span class="n">artistAlbum</span><span class="p">.</span><span class="n">artist</span> <span class="o">=</span> <span class="n">album</span><span class="p">.</span><span class="n">artist</span>
+<span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>The query finds all the latest albums from every artist (meaning if an artist releases 2 albums in 2019 but none afterwards, those albums appear).
+It's already pretty complicated so lets write a common table expression which we can use later in the query:</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="n">artistInfo</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">activeUntil</span><span class="p">)</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">artist</span><span class="p">,</span> <span class="k">max</span><span class="p">(</span><span class="n">year_of_release</span><span class="p">)</span>
+  <span class="k">FROM</span> <span class="n">album</span>
+<span class="p">)</span>
+
+<span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">album</span>
+<span class="k">JOIN</span> <span class="n">artistInfo</span> <span class="k">ON</span> <span class="p">(</span><span class="n">artist</span> <span class="o">=</span> <span class="n">artistInfo</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">WHERE</span> <span class="n">year_of_release</span> <span class="o">=</span> <span class="n">artistInfo</span><span class="p">.</span><span class="n">activeUntil</span><span class="p">;</span>
+</code></pre></div><p>More verbose, but hopefully you can see how this would scale a bit nicer. If we assume the data populating <code>artistInfo</code>
+gets more complex, the query below doesn't need to grow in complexity.</p>
+<hr>
+<p>The catch here is now we're using joins,
+but this actually has another added benefit to it - which we'll illustrate by explaining the query plan on these two queries.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">EXPLAIN</span> <span class="n">QUERY</span> <span class="n">PLAN</span>
+<span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">album</span>
+<span class="k">WHERE</span> <span class="n">year_of_release</span> <span class="o">=</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="k">max</span><span class="p">(</span><span class="n">year_of_release</span><span class="p">)</span>
+  <span class="k">FROM</span> <span class="n">album</span> <span class="k">AS</span> <span class="n">artistAlbum</span>
+  <span class="k">WHERE</span> <span class="n">artistAlbum</span><span class="p">.</span><span class="n">artist</span> <span class="o">=</span> <span class="n">album</span><span class="p">.</span><span class="n">artist</span>
+<span class="p">)</span><span class="p">;</span>
+</code></pre></div><table>
+<thead>
+<tr>
+<th>id</th>
+<th>parent</th>
+<th>detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>0</td>
+<td>SCAN TABLE album</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0</td>
+<td>CORRELATED SCALAR SUBQUERY 1</td>
+</tr>
+<tr>
+<td>10</td>
+<td>5</td>
+<td>SEARCH TABLE album AS artistAlbum</td>
+</tr>
+</tbody>
+</table>
+<p>Because the subquery is <code>CORRELATED</code> it runs once per row of album, which is expensive for large data sets.
+The subsequent <code>SEARCH</code> comes from the <code>WHERE artistAlbum.artist = album.artist</code>, there's no index on the <code>album.artist</code>
+column so it just has to search the table for a match. Now we'll check out the one using a common table expression.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">EXPLAIN</span> <span class="n">QUERY</span> <span class="n">PLAN</span>
+<span class="k">WITH</span> <span class="n">artistInfo</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">activeUntil</span><span class="p">)</span> <span class="k">AS</span> <span class="p">(</span>
+  <span class="k">SELECT</span> <span class="n">artist</span><span class="p">,</span> <span class="k">max</span><span class="p">(</span><span class="n">year_of_release</span><span class="p">)</span>
+  <span class="k">FROM</span> <span class="n">album</span>
+<span class="p">)</span>
+
+<span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">album</span>
+<span class="k">JOIN</span> <span class="n">artistInfo</span> <span class="k">ON</span> <span class="p">(</span><span class="n">artist</span> <span class="o">=</span> <span class="n">artistInfo</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">WHERE</span> <span class="n">year_of_release</span> <span class="o">=</span> <span class="n">artistInfo</span><span class="p">.</span><span class="n">activeUntil</span><span class="p">;</span>
+</code></pre></div><table>
+<thead>
+<tr>
+<th>id</th>
+<th>parent</th>
+<th>detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>0</td>
+<td>MATERIALIZE 1</td>
+</tr>
+<tr>
+<td>7</td>
+<td>3</td>
+<td>SEARCH TABLE album</td>
+</tr>
+<tr>
+<td>23</td>
+<td>0</td>
+<td>SCAN SUBQUERY 1</td>
+</tr>
+<tr>
+<td>25</td>
+<td>0</td>
+<td>SCAN TABLE album</td>
+</tr>
+</tbody>
+</table>
+<p>Now instead of the correlated subquery, we're materializing that subquery to start and then joining it with album. Materializing
+just happens once so this query becomes a lot more performant.</p>
+<hr>
+<p>There's one other huge benefit to common table expressions, which is that you can do
+recursion! They're harder to follow and potentially defeat &ldquo;easier to read and maintain&rdquo; but sometimes they're the simplest solution and worth
+knowing. Here's a recursive query that comes in handy for splitting a single string into a table where each row is one word:</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="k">RECURSIVE</span>
+<span class="n">split_string</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">str</span><span class="p">)</span> <span class="k">AS</span> <span class="p">(</span>
+    <span class="k">SELECT</span> <span class="s1">&#39;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="p">:</span><span class="k">input</span> <span class="o">|</span><span class="o">|</span> <span class="s1">&#39;</span><span class="s1"> </span><span class="s1">&#39;</span>
+    <span class="k">UNION</span> <span class="k">ALL</span> <span class="k">SELECT</span>
+      <span class="n">substr</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">instr</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="s1">&#39;</span><span class="s1"> </span><span class="s1">&#39;</span><span class="p">)</span><span class="p">)</span><span class="p">,</span>
+      <span class="n">substr</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">instr</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="s1">&#39;</span><span class="s1"> </span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">FROM</span> <span class="n">split_string</span> <span class="k">WHERE</span> <span class="n">str</span> <span class="o">!</span><span class="o">=</span> <span class="s1">&#39;</span><span class="s1">&#39;</span>
+<span class="p">)</span>
+
+<span class="k">SELECT</span> <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+</code></pre></div><p>To show how this works lets run it with <code>:input</code> = <code>&quot;hello recursive world&quot;</code>:</p>
+<table>
+<thead>
+<tr>
+<th>word</th>
+<th>str</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>hello recursive world</td>
+</tr>
+<tr>
+<td>hello</td>
+<td>recursive world</td>
+</tr>
+<tr>
+<td>recursive</td>
+<td>world</td>
+</tr>
+<tr>
+<td>world</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>We're making heavy use of the <code>instr</code> function to find the next space, take the word before that and leave the remaining string. Recursive
+queries work like a queue, the first part of the query (everything before <code>UNION ALL</code>) populates the queue initially, and
+then the sqlite runtime pops off a row from the queue, runs the query after the <code>UNION ALL</code> using only that row, and pushes the results onto the
+queue. Eventually <code>str</code> is empty so the query after <code>UNION ALL</code> pushes nothing onto the queue, so it ends. The results above are both the queue forming
+and the table created at the end.</p>
+<p>Since we only care about the words you just have to modify how you select from the query:</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="n">word</span>
+<span class="k">FROM</span> <span class="n">split_string</span>
+<span class="k">WHERE</span> <span class="n">word</span> <span class="o">!</span><span class="o">=</span> <span class="s1">&#39;</span><span class="s1">&#39;</span><span class="p">;</span>
+</code></pre></div><table>
+<thead>
+<tr>
+<th>word</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hello</td>
+</tr>
+<tr>
+<td>recursive</td>
+</tr>
+<tr>
+<td>world</td>
+</tr>
+</tbody>
+</table>
+<p>Nice! Sometimes you want to be able to <code>JOIN</code> a runtime parameter for sqlite, and this is how I do it. Again it has the benefit of running once,
+which can be a lot more performant than writing the query to use <code>WHERE ___ IN ____</code> sometimes.</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2020-05-13&nbsp;<a class="git-hash" href="https://github.com/alecstrong/alecstrong.com/commit/b37a414241492980a9f4a8d875ec081e5b4fc640" target="_blank" title="commit by Alec Strong(astrong@squareup.com) b37a414241492980a9f4a8d875ec081e5b4fc640: Common Table Expressions post">
+                                    <i class="fas fa-hashtag fa-fw"></i>b37a414</a></span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/multiple-dialects/" class="prev" rel="prev" title="Supporting Multiple Dialects in SQLDelight"><i class="fas fa-angle-left fa-fw"></i>Supporting Multiple Dialects in SQLDelight</a>
+            <a href="/posts/sqlite-sdk-30/" class="next" rel="next" title="Mysterious SQLite bugs and how to solve them.">Mysterious SQLite bugs and how to solve them.<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.62.2">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Alec Strong</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

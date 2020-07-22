@@ -1,58 +1,39 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>AlecStrong on AlecStrong</title>
-        <link>https://alecstrong.com/</link>
-        <description>Recent content in AlecStrong on AlecStrong</description>
-        <generator>Hugo -- gohugo.io</generator>
-
-            <language>en</language>
-
-
-
-            <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-
-
-            <lastBuildDate>Wed, 13 May 2020 21:31:03 -0400</lastBuildDate>
-
-        <atom:link href="https://alecstrong.com/" rel="self" type="application/rss+xml" />
-
-            <item>
-                <title>Posts</title>
-                <link>https://alecstrong.com/posts/</link>
-                <pubDate>Wed, 13 May 2020 21:31:03 -0400</pubDate>
-
-                <guid>https://alecstrong.com/posts/</guid>
-                <description></description>
-            </item>
-
-            <item>
-                <title>Mytalks</title>
-                <link>https://alecstrong.com/mytalks/</link>
-                <pubDate>Thu, 23 Jan 2020 20:57:46 -0500</pubDate>
-
-                <guid>https://alecstrong.com/mytalks/</guid>
-                <description></description>
-            </item>
-
-            <item>
-                <title>Talks</title>
-                <link>https://alecstrong.com/talks/</link>
-                <pubDate>Thu, 23 Jan 2020 20:57:46 -0500</pubDate>
-
-                <guid>https://alecstrong.com/talks/</guid>
-                <description>&lt;p&gt;2019-12-16 &lt;strong&gt;&lt;a href=&#34;../mytalks/sammpoia&#34;&gt;Shipping a mobile multiplatform project on iOS &amp;amp; Android&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Kotlinconf 2019, Copenhagen Denmark)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2019-09-27 &lt;strong&gt;&lt;a href=&#34;../mytalks/gadnat&#34;&gt;Good APIs Don&#39;t Need a Tutorial&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon NYC 2019, NYC)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2018-10-05 &lt;strong&gt;&lt;a href=&#34;../mytalks/wtbiwipfk&#34;&gt;What&#39;s the big IDEA? Writing IntelliJ plugins for Kotlin&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Kotlinconf 2018, Amsterdam)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2018-10-04  &lt;strong&gt;&lt;a href=&#34;../mytalks/amd&#34;&gt;A Multiplatform Delight&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Kotlinconf 2018, Amsterdam)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2018-08-27 &lt;strong&gt;&lt;a href=&#34;../mytalks/mp&#34;&gt;Multiplatform Persistence&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon NYC 2018, NYC)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2018-01-29 &lt;strong&gt;&lt;a href=&#34;../mytalks/kn&#34;&gt;Kotlin/Native&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Android KW, Kitchener-Waterloo)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2017-11-05 &lt;strong&gt;&lt;a href=&#34;../mytalks/gkc2&#34;&gt;Generating Kotlin Code&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon SF, San Francisco)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2017-11-03 &lt;strong&gt;&lt;a href=&#34;../mytalks/gkc&#34;&gt;Generating Kotlin Code&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Kotlinconf 2017, San Francisco)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2017-09-25 &lt;strong&gt;&lt;a href=&#34;../mytalks/tros&#34;&gt;The Resurgence of SQL&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon NYC 2017, NYC)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2016-09-30 &lt;strong&gt;&lt;a href=&#34;../mytalks/eswa&#34;&gt;Embracing SQL Without Abstraction&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Droidcon NYC 2016, NYC)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;2016-08-05 &lt;strong&gt;&lt;a href=&#34;../mytalks/ip&#34;&gt;IntelliJ Plugins&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;(Internal Talk Series, Square)&lt;/em&gt;&lt;/p&gt;
-</description>
-            </item>
-
-    </channel>
+        <title>AlecStrong</title>
+        <link>http://alecstrong.com/</link>
+        <description>AlecStrong</description>
+        <generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 22 Jul 2020 10:02:11 -0400</lastBuildDate>
+            <atom:link href="http://alecstrong.com/index.xml" rel="self" type="application/rss+xml" />
+        <item>
+    <title>Mysterious SQLite bugs and how to solve them.</title>
+    <link>http://alecstrong.com/posts/sqlite-sdk-30/</link>
+    <pubDate>Wed, 22 Jul 2020 10:02:11 -0400</pubDate>
+    <author>Author</author>
+    <guid>http://alecstrong.com/posts/sqlite-sdk-30/</guid>
+    <description><![CDATA[TLDR: Android 30 upgrades SQLite from 3.22.0 -&gt; 3.28.0, this introduces new alter table behavior which will potentially cause runtime exceptions when ALTER TABLE statements are ran on tables which are used in a view. To preserve old behavior turn on PRAGMA legacy_alter_table=ON before running your migrations.
+ Late last week we experienced a weird bug on Cash App happening to a few of our developers - reproducibly but not for everyone.]]></description>
+</item><item>
+    <title>SQLite Helper Queries</title>
+    <link>http://alecstrong.com/posts/cte/</link>
+    <pubDate>Wed, 13 May 2020 21:31:03 -0400</pubDate>
+    <author>Author</author>
+    <guid>http://alecstrong.com/posts/cte/</guid>
+    <description><![CDATA[In programming one of the earliest tools we're given for simplifying complex code is helper functions. Splitting code into smaller more digestible blocks makes it easier to maintain and read, which is usually more important than code that's easier to write. In SQL we have tools for accomplishing the same thing! One of the bigger ones is views which can help share an underlying query between multiple other ones. Leandro Favarin wrote a great post on how to put views into practice in SQLite here.]]></description>
+</item><item>
+    <title>Supporting Multiple Dialects in SQLDelight</title>
+    <link>http://alecstrong.com/posts/multiple-dialects/</link>
+    <pubDate>Thu, 13 Feb 2020 13:15:17 -0500</pubDate>
+    <author>Author</author>
+    <guid>http://alecstrong.com/posts/multiple-dialects/</guid>
+    <description><![CDATA[With SQLDelight 1.3.0 and above we now support multiple dialects of SQL (at time of writing: SQLite 3.18, SQLite 3.24, and MySQL). They're not complete implementations of any of those dialects but they support necessary features and the real meat of the release is a straightforward framework for adding parts of the dialects incrementally. For example, SQLite 3.24 is just SQLite 3.18 with upsert on top (thank you Angus Holder!).]]></description>
+</item><item>
+    <title>Integrating Github Actions for Kotlin Multiplatform</title>
+    <link>http://alecstrong.com/posts/github-actions-mpp/</link>
+    <pubDate>Thu, 23 Jan 2020 20:57:46 -0500</pubDate>
+    <author>Author</author>
+    <guid>http://alecstrong.com/posts/github-actions-mpp/</guid>
+    <description><![CDATA[With Kotlin Multiplatform (KMP) it's possible to build artifacts for multiple platforms using the same toolchain, but until portable artifacts for KMP are released you need to build platform artifacts on their respective platforms.
+With SqlDelight 1.2.2 we now also deploy Windows (mingW) artifacts, meaning it's impossible to publish from a single OS (since we also support macOS targets). There was no simple setup with Travis and Github Actions is the new hot stuff so we gave that a go and here's how it works:]]></description>
+</item></channel>
 </rss>

@@ -1,78 +1,100 @@
-baseURL = "https://alecstrong.com/"
-languageCode = "en"                                      # website language
-defaultContentLanguage = "en"                            # [en, zh, ...] determines which i18n file to use
-title = "AlecStrong"                                     # website title
-theme = "LoveIt"                                         # theme
-enableGitInfo = true                                    # whether to use git commit log to generate lastmod record
-hasCJKLanguage = false                                   # whether to include chinese/japanese/korean
-paginate = 12                                            # default amount of posts in each pages
-enableEmoji = true                                       # whether to use emoji code
+baseURL = "http://alecstrong.com/"
+# [en, zh-cn, fr, ...] determines default content language
+defaultContentLanguage = "en"
+# language code
+languageCode = "en"
+title = "AlecStrong"
+
+enableGitInfo = true
+enableEmoji = true
 googleAnalytics = "UA-156931611-1"
 copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License."
-                                                         # copyright description used only for seo schema
 
-                                                      #### Syntax Highlighting (https://gohugo.io/content-management/syntax-highlighting)
-pygmentsOptions = "linenos=table"
-pygmentsCodefences = true
-pygmentsUseClasses = true
-pygmentsCodefencesGuessSyntax = true
+# Change the default theme to be use when building the site with Hugo
+theme = "LoveIt"
 
-staticDir = ["static", "../assets/others"]               # static directories
+[params]
+  # LoveIt theme version
+  version = "0.2.X"
+  keywords = ["Programming", "SqlDelight"]
+  gitRepo = "https://github.com/alecstrong/alecstrong.com"
 
-[author]                                              #### Author Info
-  name = "Alec Strong"
+  [params.page]
+    linkToMarkdown = true
 
-[sitemap]                                             #### Sitemap Info
+  [params.home]
+    [params.home.profile]
+      gravatarEmail = "anstrong22@gmail.com"
+    [params.home.posts]
+      paginate = 6
+
+  [params.social]
+    GitHub = "AlecStrong"
+    Twitter = "Strongolopolis"
+
+  [params.share]
+    enable = true
+    Twitter = true
+    Reddit = true
+
+  [params.footer]
+    since = 2020
+    license= '<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    pre = ""
+    post = ""
+    name = "Posts"
+    url = "/posts/"
+    title = ""
+    weight = 1
+  [[menu.main]]
+    identifier = "talks"
+    pre = ""
+    post = ""
+    name = "Talks"
+    url = "/talks/"
+    title = ""
+    weight = 2
+
+[sitemap]
   changefreq = "weekly"
   filename = "sitemap.xml"
   priority = 0.5
 
-[Permalinks]                                          #### Permalinks Info (https://gohugo.io/content-management/urls/#permalinks)
-  posts = ":year/:month/:filename"
+# Markup related config in Hugo
+[markup]
+  # Syntax Highlighting
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    lineNumbersInTable = true
+    # false is a necessary configuration
+    # (https://github.com/dillonzq/LoveIt/issues/158)
+    noClasses = false
+  # Goldmark is from Hugo 0.60 the default library used for Markdown
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      definitionList = true
+      footnote = true
+      linkify = true
+      strikethrough = true
+      table = true
+      taskList = true
+      typographer = true
+    [markup.goldmark.renderer]
+      # whether to use HTML tags directly in the document
+      unsafe = true
+  # Table Of Contents settings
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 6
 
-[menu]                                                #### Menu Info
-  [[menu.main]]
-    identifier = "posts"
-    name = "Posts"
-    url = "posts"
-    weight = 1
-
-  [[menu.main]]
-    identifier = "talks"
-    name = "Talks"
-    url = "talks"
-    weight = 2
-
-[params]
-  version = "5.x"                                        # LoveIt theme version
-  keywords = ["Programming", "SqlDelight"]                   # site keywords
-
-                                                      #### Home Page Info
-  home_mode = "post"                                     # [post, other] home mode
-  home_paginate = 6                                      # special amount of posts in each home post page
-
-  socialShare = true                                     # whether to show social share links in post page
-
-                                                      #### Footer CopyRight Info
-  since = 2020                                           # Site creation time
-  icp = ''                                               # ICP info only in China (HTML format is allowed)
-  license= '<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
-                                                         # license info (HTML format is allowed)
-  gitRepo = "https://github.com/alecstrong/alecstrong.com"
-
-  linkToMarkdown = true                                  # whether to show link to Raw Markdown content of the post
-
-  [params.gravatar]                                      # Gravatar Info for preferred avatar in home page
-    email = "anstrong22@gmail.com"
-
-  [params.social]                                        # Social Info in home page
-    GitHub = "AlecStrong"
-    Twitter = "Strongolopolis"
-
-  [params.share]                                         # Social Share Links in post page
-    enable = true
-    Twitter = true
-    Reddit = true
+[author]
+  name = "Alec Strong"
 
 [privacy]                                             #### Privacy Info (https://gohugo.io/about/hugo-and-gdpr/)
   [privacy.googleAnalytics]
@@ -80,19 +102,3 @@ staticDir = ["static", "../assets/others"]               # static directories
 
   [privacy.youtube]
     privacyEnhanced = true
-
-[mediaTypes]                                          #### Options to make hugo output .md files.
-  [mediaTypes."text/plain"]
-    suffixes = ["md"]
-
-[outputFormats.MarkDown]                              #### Options to make hugo output .md files.
-  mediaType = "text/plain"
-  isPlainText = true
-  isHTML = false
-
-[outputs]                                             #### Options to make hugo output .md files.
-  home = ["HTML", "RSS"]
-  page = ["HTML", "MarkDown"]
-  section = ["HTML", "RSS"]
-  taxonomy = ["HTML", "RSS"]
-  taxonomyTerm = ["HTML"]

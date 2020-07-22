@@ -1,0 +1,107 @@
+baseURL = "https://alecstrong.com/"
+languageCode = "en"                                      # website language
+defaultContentLanguage = "en"                            # [en, zh, ...] determines which i18n file to use
+title = "AlecStrong"                                     # website title
+theme = "LoveIt"                                         # theme
+
+#enableGitInfo = true                                    # whether to use git commit log to generate lastmod record
+#hasCJKLanguage = false                                   # whether to include chinese/japanese/korean
+#enableEmoji = true                                       # whether to use emoji code
+#googleAnalytics = "UA-156931611-1"
+#copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License."
+                                                         # copyright description used only for seo schema
+
+                                                      #### Syntax Highlighting (https://gohugo.io/content-management/syntax-highlighting)
+#pygmentsOptions = "linenos=table"
+#pygmentsCodefences = true
+#pygmentsUseClasses = true
+#pygmentsCodefencesGuessSyntax = true
+#
+#staticDir = ["static", "../assets/others"]               # static directories
+#
+#[author]                                              #### Author Info
+#  name = "Alec Strong"
+#
+#[sitemap]                                             #### Sitemap Info
+#  changefreq = "weekly"
+#  filename = "sitemap.xml"
+#  priority = 0.5
+#
+#[Permalinks]                                          #### Permalinks Info (https://gohugo.io/content-management/urls/#permalinks)
+#  posts = ":year/:month/:filename"
+
+[menu]                                                #### Menu Info
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "posts"
+    title = ""
+    pre = ""
+    post = ""
+    weight = 1
+
+  [[menu.main]]
+    identifier = "talks"
+    name = "Talks"
+    url = "talks"
+    title = ""
+    pre = ""
+    post = ""
+    weight = 2
+
+[params]
+  version = "0.2.x"
+#  keywords = ["Programming", "SqlDelight"]
+#  gitRepo = "https://github.com/alecstrong/alecstrong.com"
+#
+#  [params.page]
+#    linkToMarkdown = true
+#
+#  [params.home]
+#    [params.home.profile]
+#      gravatarEmail = "anstrong22@gmail.com"
+#    [params.home.posts]
+#      paginate = 6
+#
+#  [params.social]                                        
+#    GitHub = "AlecStrong"
+#    Twitter = "Strongolopolis"
+#
+#  [params.share]                                         
+#    enable = true
+#    Twitter = true
+#    Reddit = true
+#
+#  [params.footer]
+#    since = 2020                                           
+#    license= '<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
+
+# Markup related configuration in Hugo
+[markup]
+  # Syntax Highlighting (https://gohugo.io/content-management/syntax-highlighting)
+  [markup.highlight]
+    # false is a necessary configuration (https://github.com/dillonzq/LoveIt/issues/158)
+    noClasses = false
+
+#[privacy]                                             #### Privacy Info (https://gohugo.io/about/hugo-and-gdpr/)
+#  [privacy.googleAnalytics]
+#    anonymizeIP = true
+#
+#  [privacy.youtube]
+#    privacyEnhanced = true
+#
+#[mediaTypes]                                          #### Options to make hugo output .md files.
+#  [mediaTypes."text/plain"]
+#    suffixes = ["md"]
+#
+#[outputFormats.MarkDown]                              #### Options to make hugo output .md files.
+#  mediaType = "text/plain"
+#  isPlainText = true
+#  isHTML = false
+#
+#[outputs]                                             #### Options to make hugo output .md files.
+#  home = ["HTML", "RSS"]
+#  page = ["HTML", "MarkDown"]
+#  section = ["HTML", "RSS"]
+#  taxonomy = ["HTML", "RSS"]
+#  taxonomyTerm = ["HTML"]

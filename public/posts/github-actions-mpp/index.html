@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Integrating Github Actions for Kotlin Multiplatform - AlecStrong</title><meta name="Description" content=""><meta property="og:title" content="Integrating Github Actions for Kotlin Multiplatform" />
+<meta property="og:description" content="With Kotlin Multiplatform (KMP) it&#39;s possible to build artifacts for multiple platforms using the same toolchain, but until portable artifacts for KMP are released you need to build platform artifacts on their respective platforms.
+With SqlDelight 1.2.2 we now also deploy Windows (mingW) artifacts, meaning it&#39;s impossible to publish from a single OS (since we also support macOS targets). There was no simple setup with Travis and Github Actions is the new hot stuff so we gave that a go and here&#39;s how it works:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://alecstrong.com/posts/github-actions-mpp/" />
+<meta property="article:published_time" content="2020-01-23T20:57:46-05:00" />
+<meta property="article:modified_time" content="2020-01-24T11:43:00-05:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Integrating Github Actions for Kotlin Multiplatform"/>
+<meta name="twitter:description" content="With Kotlin Multiplatform (KMP) it&#39;s possible to build artifacts for multiple platforms using the same toolchain, but until portable artifacts for KMP are released you need to build platform artifacts on their respective platforms.
+With SqlDelight 1.2.2 we now also deploy Windows (mingW) artifacts, meaning it&#39;s impossible to publish from a single OS (since we also support macOS targets). There was no simple setup with Travis and Github Actions is the new hot stuff so we gave that a go and here&#39;s how it works:"/>
+<meta name="application-name" content="AlecStrong">
+<meta name="apple-mobile-web-app-title" content="AlecStrong"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://alecstrong.com/posts/github-actions-mpp/" /><link rel="next" href="http://alecstrong.com/posts/multiple-dialects/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Integrating Github Actions for Kotlin Multiplatform",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/alecstrong.com\/posts\/github-actions-mpp\/"
+        },"genre": "posts","wordcount":  633 ,
+        "url": "http:\/\/alecstrong.com\/posts\/github-actions-mpp\/","datePublished": "2020-01-23T20:57:46-05:00","dateModified": "2020-01-24T11:43:00-05:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Alec Strong"},"author": {
+                "@type": "Person",
+                "name": "Alec Strong"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : '' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="AlecStrong">AlecStrong</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/talks/"> Talks </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="AlecStrong">AlecStrong</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/talks/" title="">Talks</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Integrating Github Actions for Kotlin Multiplatform</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>Alec Strong</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-01-23">2020-01-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;633 words&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;3 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#continuous-integration">Continuous Integration</a></li>
+        <li><a href="#continuous-deployment">Continuous Deployment</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>With Kotlin Multiplatform (KMP) it's possible to build artifacts for multiple platforms using the same toolchain,
+but until portable artifacts for KMP are released you need to build platform artifacts on
+their respective platforms.</p>
+<p>With SqlDelight 1.2.2 we now also deploy Windows (mingW) artifacts, meaning it's impossible to publish
+from a single OS (since we also support macOS targets). There was no simple setup with Travis and Github Actions
+is the new hot stuff so we gave that a go and here's how it works:</p>
+<h3 id="continuous-integration">Continuous Integration</h3>
+<p>Github Actions is configured through yaml files, each one describing a specific workflow. For CI we have a few workflows but the main one
+is <a href="https://github.com/cashapp/sqldelight/blob/master/.github/workflows/PR.yml" target="_blank" rel="noopener noreffer">test</a> which is a workflow configured to run on PRs.</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">on<span class="p">:</span><span class="w">
+</span><span class="w">  </span>pull_request<span class="p">:</span><span class="w">
+</span><span class="w">    </span>paths-ignore<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span><span class="s1">&#39;docs/**&#39;</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span><span class="s1">&#39;*.md&#39;</span><span class="w">
+</span></code></pre></div><p>It ignores changes to documentation meaning PRs that only touch the ignored files immediately go green. Dope!</p>
+<p>In a workflow file you specify a series of jobs that happen when the workflow is triggered, and you can use
+this to boot up all the different OS's you target for KMP. You can do it by specifying multiple jobs (one for each OS)
+or using a build matrix which is what we do.</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">jobs<span class="p">:</span><span class="w">
+</span><span class="w">  </span>build<span class="p">:</span><span class="w">
+</span><span class="w">    </span>strategy<span class="p">:</span><span class="w">
+</span><span class="w">      </span>matrix<span class="p">:</span><span class="w">
+</span><span class="w">        </span>os<span class="p">:</span><span class="w"> </span><span class="p">[</span>macOS-latest<span class="p">,</span><span class="w"> </span>windows-latest<span class="p">,</span><span class="w"> </span>ubuntu-latest<span class="p">]</span><span class="w">
+</span><span class="w">        </span>job<span class="p">:</span><span class="w"> </span><span class="p">[</span>instrumentation<span class="p">,</span><span class="w"> </span>test<span class="p">]</span><span class="w">
+</span><span class="w">        </span>exclude<span class="p">:</span><span class="w">
+</span><span class="w">          </span>-<span class="w"> </span>os<span class="p">:</span><span class="w"> </span>windows-latest<span class="w">
+</span><span class="w">            </span>job<span class="p">:</span><span class="w"> </span>instrumentation<span class="w">
+</span><span class="w">          </span>-<span class="w"> </span>os<span class="p">:</span><span class="w"> </span>ubuntu-latest<span class="w">
+</span><span class="w">            </span>job<span class="p">:</span><span class="w"> </span>instrumentation<span class="w">
+</span></code></pre></div><p>This configures 6 jobs: <code>macOS-latest/test</code>, <code>macOS-latest/instrumentation</code>, <code>windows-latest/test</code>, <code>windows-latest/instrumentation</code>,
+<code>ubuntu-latest/test</code> and <code>ubuntu-latest/instrumentation</code> (its the cross product of matrix properties),
+but we only run instrumentation on macOS so we ignore the other 2
+instrumentation jobs and we're down to 4. Since we want each machine to run a different gradle task we
+can switch on the matrix property for that specific job and skip the step if its not the right configuration:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>Run<span class="w"> </span>ios<span class="w"> </span>tests<span class="w">
+</span><span class="w">  </span>if<span class="p">:</span><span class="w"> </span>matrix.os<span class="w"> </span>==<span class="w"> </span><span class="s1">&#39;macOS-latest&#39;</span><span class="w"> </span><span class="cp">&amp;&amp;</span><span class="w"> </span>matrix.job<span class="w"> </span>==<span class="w"> </span><span class="s1">&#39;test&#39;</span><span class="w">
+</span><span class="w">  </span>run<span class="p">:</span><span class="w"> </span>./gradlew<span class="w"> </span>iosTest<span class="w">
+</span></code></pre></div><p>The final piece to the puzzle is the thing that makes github actions so special: actions! Each step in the workflow
+can be a simple shell command or you can use an action - of which theres already tons of useful ones on the
+<a href="https://github.com/marketplace?type=actions" target="_blank" rel="noopener noreffer">marketplace</a>. For example the <code>macOS/instrumentation</code> job uses
+the <a href="https://github.com/marketplace/actions/android-emulator-runner" target="_blank" rel="noopener noreffer">Android Emulator Runner</a> action:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>Run<span class="w"> </span>instrumentation<span class="w"> </span>tests<span class="w">
+</span><span class="w">  </span>if<span class="p">:</span><span class="w"> </span>matrix.job<span class="w"> </span>==<span class="w"> </span><span class="s1">&#39;instrumentation&#39;</span><span class="w">
+</span><span class="w">  </span>uses<span class="p">:</span><span class="w"> </span>reactivecircus/android-emulator-runner@v2<span class="w">
+</span><span class="w">  </span>with<span class="p">:</span><span class="w">
+</span><span class="w">    </span>api-level<span class="p">:</span><span class="w"> </span><span class="m">29</span><span class="w">
+</span><span class="w">    </span>script<span class="p">:</span><span class="w"> </span>./gradlew<span class="w"> </span>connectedCheck<span class="w"> </span><span class="p">:</span>sqldelight-gradle-plugin<span class="p">:</span>build<span class="w">
+</span></code></pre></div><p>This is the game changer - not having to worry about maintaining your own emulator script is huge. And the same goes for
+all the other actions available. One of the other workflows we have set up to run on PRs verifies the gradle wrapper
+is a trusted published version to protect your repo from an attack vector - again it takes no effort to apply it since all the
+work is done for you!</p>
+<h3 id="continuous-deployment">Continuous Deployment</h3>
+<p>The more challenging bit is configuring releases. To do this we have a single workflow <a href="https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Release.yml" target="_blank" rel="noopener noreffer">Release</a>
+which publishes the artifacts and IntelliJ plugin - both for official releases and snapshots.</p>
+<p>To facilitate releasing you need to give Github some
+<a href="https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets" target="_blank" rel="noopener noreffer">secrets</a> - your
+Sonatype username/password and a GPG key, and then expose those to the workflow job step which runs the publish:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>Publish<span class="w"> </span>the<span class="w"> </span>windows<span class="w"> </span>artifact<span class="w">
+</span><span class="w">  </span>env<span class="p">:</span><span class="w">
+</span><span class="w">    </span>ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME<span class="p">:</span><span class="w"> </span>${{<span class="w"> </span>secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME<span class="w"> </span>}}<span class="w">
+</span><span class="w">    </span>ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD<span class="p">:</span><span class="w"> </span>${{<span class="w"> </span>secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD<span class="w"> </span>}}<span class="w">
+</span><span class="w">    </span>ORG_GRADLE_PROJECT_signingKey<span class="p">:</span><span class="w"> </span>${{<span class="w"> </span>secrets.ORG_GRADLE_PROJECT_signingKey<span class="w"> </span>}}<span class="w">
+</span><span class="w">  </span>run<span class="p">:</span><span class="w"> </span>./gradlew<span class="w"> </span>publishMingwPublicationToMavenRepository<span class="w">
+</span></code></pre></div><p>The GPG key you add to Github settings should be an ascii-armored version of the key which you can get
+by running <code>gpg --export --ascii &lt;keyid&gt; | pbcopy</code> in your console. If you're using gradle's signing plugin
+(if you're not sure, you probably are) it needs to be configured to use the ascii armored key.</p>
+<div class="highlight"><pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="kt">def</span> <span class="nf">isReleaseBuild</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">return</span> <span class="n">VERSION_NAME</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s2">&#34;SNAPSHOT&#34;</span><span class="o">)</span> <span class="o">=</span><span class="o">=</span> <span class="kc">false</span>
+<span class="o">}</span>
+
+<span class="kt">def</span> <span class="nf">getGpgKey</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">return</span> <span class="nf">hasProperty</span><span class="o">(</span><span class="s1">&#39;signingKey&#39;</span><span class="o">)</span> <span class="o">?</span> <span class="n">signingKey</span> <span class="o">:</span> <span class="s2">&#34;&#34;</span>
+<span class="o">}</span>
+
+<span class="n">signing</span> <span class="o">{</span>
+  <span class="n">required</span> <span class="o">{</span> <span class="n">isReleaseBuild</span><span class="o">(</span><span class="o">)</span> <span class="o">}</span>
+
+  <span class="kt">def</span> <span class="n">signingKey</span> <span class="o">=</span> <span class="n">getGpgKey</span><span class="o">(</span><span class="o">)</span>
+  <span class="k">if</span> <span class="o">(</span><span class="o">!</span><span class="n">signingKey</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="o">)</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">isReleaseBuild</span><span class="o">(</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">useInMemoryPgpKeys</span><span class="o">(</span><span class="n">signingKey</span><span class="o">,</span> <span class="s2">&#34;&#34;</span><span class="o">)</span>
+    <span class="n">sign</span> <span class="n">publishing</span><span class="o">.</span><span class="na">publications</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>The KMP Gradle plugin is smart enough to not try and build/publish for unsupported architectures, so we just let the macOS
+job publish all the artifacts it can, and then Windows only tries to publish the mingW publications.</p>
+<hr>
+<p>And thats it! We also have a workflow to <a href="https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Publish-Website.yml" target="_blank" rel="noopener noreffer">deploy gh-pages with mkdocs</a>
+and a job which <a href="https://github.com/cashapp/sqldelight/blob/master/.github/workflows/Release.yml#L37-L47" target="_blank" rel="noopener noreffer">publishes the IntelliJ plugin</a>. With Github Actions
+we've been able to shrink the actual releasing process <a href="https://github.com/cashapp/sqldelight/commit/5acee5551bd1c6a19233ed4b32c0c7bb445faff2" target="_blank" rel="noopener noreffer">pretty dramatically</a>
+and I'm looking forward to using it more!</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2020-01-24&nbsp;<a class="git-hash" href="https://github.com/alecstrong/alecstrong.com/commit/962a3666344e31f56d77655d72702da78fe2446b" target="_blank" title="commit by Alec Strong(astrong@squareup.com) 962a3666344e31f56d77655d72702da78fe2446b: Finish post">
+                                    <i class="fas fa-hashtag fa-fw"></i>962a366</a></span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+            <a href="/posts/multiple-dialects/" class="next" rel="next" title="Supporting Multiple Dialects in SQLDelight">Supporting Multiple Dialects in SQLDelight<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.62.2">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Alec Strong</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
