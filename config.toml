@@ -24,6 +24,7 @@ theme = "LoveIt"
 
   [params.home]
     [params.home.profile]
+      social = true
       gravatarEmail = "anstrong22@gmail.com"
     [params.home.posts]
       paginate = 6
