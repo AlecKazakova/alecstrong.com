@@ -7,7 +7,7 @@ title = "AlecStrong"
 
 enableGitInfo = true
 enableEmoji = true
-googleAnalytics = "156931611"
+googleAnalytics = "UA-156931611-1"
 copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License."
 
 # Change the default theme to be use when building the site with Hugo
