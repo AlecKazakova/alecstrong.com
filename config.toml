@@ -21,6 +21,10 @@ theme = "LoveIt"
 
   [params.page]
     linkToMarkdown = true
+    [params.page.share]
+      enable = true
+      Twitter = true
+      Reddit = true
 
   [params.home]
     [params.home.profile]
@@ -32,11 +36,6 @@ theme = "LoveIt"
   [params.social]
     GitHub = "AlecStrong"
     Twitter = "Strongolopolis"
-
-  [params.share]
-    enable = true
-    Twitter = true
-    Reddit = true
 
   [params.footer]
     since = 2020
