@@ -8,7 +8,7 @@
         <title>SQLite Helper Queries - AlecStrong</title><meta name="Description" content=""><meta property="og:title" content="SQLite Helper Queries" />
 <meta property="og:description" content="In programming one of the earliest tools we&#39;re given for simplifying complex code is helper functions. Splitting code into smaller more digestible blocks makes it easier to maintain and read, which is usually more important than code that&#39;s easier to write. In SQL we have tools for accomplishing the same thing! One of the bigger ones is views which can help share an underlying query between multiple other ones. Leandro Favarin wrote a great post on how to put views into practice in SQLite here." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://alecstrong.com/posts/cte/" />
+<meta property="og:url" content="https://alecstrong.com/posts/cte/" />
 <meta property="article:published_time" content="2020-05-13T21:31:03-04:00" />
 <meta property="article:modified_time" content="2020-05-13T22:37:05-04:00" />
 <meta name="twitter:card" content="summary"/>
@@ -17,7 +17,7 @@
 <meta name="application-name" content="AlecStrong">
 <meta name="apple-mobile-web-app-title" content="AlecStrong"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://alecstrong.com/posts/cte/" /><link rel="prev" href="http://alecstrong.com/posts/multiple-dialects/" /><link rel="next" href="http://alecstrong.com/posts/sqlite-sdk-30/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://alecstrong.com/posts/cte/" /><link rel="prev" href="https://alecstrong.com/posts/multiple-dialects/" /><link rel="next" href="https://alecstrong.com/posts/sqlite-sdk-30/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
@@ -25,9 +25,9 @@
         "inLanguage": "en",
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "http:\/\/alecstrong.com\/posts\/cte\/"
-        },"genre": "posts","wordcount":  733 ,
-        "url": "http:\/\/alecstrong.com\/posts\/cte\/","datePublished": "2020-05-13T21:31:03-04:00","dateModified": "2020-05-13T22:37:05-04:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@id": "https:\/\/alecstrong.com\/posts\/cte\/"
+        },"genre": "posts","wordcount":  780 ,
+        "url": "https:\/\/alecstrong.com\/posts\/cte\/","datePublished": "2020-05-13T21:31:03-04:00","dateModified": "2020-05-13T22:37:05-04:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
             "@type": "Organization",
             "name": "Alec Strong"},"author": {
                 "@type": "Person",
@@ -76,7 +76,7 @@
             <div class="toc-content" id="toc-content-auto"></div>
         </div><article class="page single"><h1 class="single-title animated flipInX">SQLite Helper Queries</h1><div class="post-meta">
             <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>Alec Strong</a></span></div>
-            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-05-13">2020-05-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;733 words&nbsp;
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2020-05-13">2020-05-13</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;780 words&nbsp;
                 <i class="far fa-clock fa-fw"></i>&nbsp;4 minutes&nbsp;</div>
         </div><div class="details toc" id="toc-static"  kept="">
                 <div class="details-summary toc-title">
@@ -91,16 +91,42 @@ the same thing! One of the bigger ones is views which
 can help share an underlying query between multiple other ones. Leandro Favarin wrote a great
 post on how to put views into practice in SQLite <a href="https://leandrofavarin.com/sqldelight-powerful-codegen" target="_blank" rel="noopener noreffer">here</a>.</p>
 <p>Another strategy for simplifying a query is common table expressions. Take for example a query like this:</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span>
 <span class="k">FROM</span> <span class="n">album</span>
 <span class="k">WHERE</span> <span class="n">year_of_release</span> <span class="o">=</span> <span class="p">(</span>
   <span class="k">SELECT</span> <span class="k">max</span><span class="p">(</span><span class="n">year_of_release</span><span class="p">)</span>
   <span class="k">FROM</span> <span class="n">album</span> <span class="k">AS</span> <span class="n">artistAlbum</span>
   <span class="k">WHERE</span> <span class="n">artistAlbum</span><span class="p">.</span><span class="n">artist</span> <span class="o">=</span> <span class="n">album</span><span class="p">.</span><span class="n">artist</span>
 <span class="p">)</span><span class="p">;</span>
-</code></pre></div><p>The query finds all the latest albums from every artist (meaning if an artist releases 2 albums in 2019 but none afterwards, those albums appear).
+</code></pre></td></tr></table>
+</div>
+</div><p>The query finds all the latest albums from every artist (meaning if an artist releases 2 albums in 2019 but none afterwards, those albums appear).
 It's already pretty complicated so lets write a common table expression which we can use later in the query:</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="n">artistInfo</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">activeUntil</span><span class="p">)</span> <span class="k">AS</span> <span class="p">(</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="n">artistInfo</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">activeUntil</span><span class="p">)</span> <span class="k">AS</span> <span class="p">(</span>
   <span class="k">SELECT</span> <span class="n">artist</span><span class="p">,</span> <span class="k">max</span><span class="p">(</span><span class="n">year_of_release</span><span class="p">)</span>
   <span class="k">FROM</span> <span class="n">album</span>
 <span class="p">)</span>
@@ -109,12 +135,26 @@ It's already pretty complicated so lets write a common table expression which we
 <span class="k">FROM</span> <span class="n">album</span>
 <span class="k">JOIN</span> <span class="n">artistInfo</span> <span class="k">ON</span> <span class="p">(</span><span class="n">artist</span> <span class="o">=</span> <span class="n">artistInfo</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
 <span class="k">WHERE</span> <span class="n">year_of_release</span> <span class="o">=</span> <span class="n">artistInfo</span><span class="p">.</span><span class="n">activeUntil</span><span class="p">;</span>
-</code></pre></div><p>More verbose, but hopefully you can see how this would scale a bit nicer. If we assume the data populating <code>artistInfo</code>
+</code></pre></td></tr></table>
+</div>
+</div><p>More verbose, but hopefully you can see how this would scale a bit nicer. If we assume the data populating <code>artistInfo</code>
 gets more complex, the query below doesn't need to grow in complexity.</p>
 <hr>
 <p>The catch here is now we're using joins,
 but this actually has another added benefit to it - which we'll illustrate by explaining the query plan on these two queries.</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">EXPLAIN</span> <span class="n">QUERY</span> <span class="n">PLAN</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">EXPLAIN</span> <span class="n">QUERY</span> <span class="n">PLAN</span>
 <span class="k">SELECT</span> <span class="o">*</span>
 <span class="k">FROM</span> <span class="n">album</span>
 <span class="k">WHERE</span> <span class="n">year_of_release</span> <span class="o">=</span> <span class="p">(</span>
@@ -122,7 +162,9 @@ but this actually has another added benefit to it - which we'll illustrate by ex
   <span class="k">FROM</span> <span class="n">album</span> <span class="k">AS</span> <span class="n">artistAlbum</span>
   <span class="k">WHERE</span> <span class="n">artistAlbum</span><span class="p">.</span><span class="n">artist</span> <span class="o">=</span> <span class="n">album</span><span class="p">.</span><span class="n">artist</span>
 <span class="p">)</span><span class="p">;</span>
-</code></pre></div><table>
+</code></pre></td></tr></table>
+</div>
+</div><table>
 <thead>
 <tr>
 <th>id</th>
@@ -151,7 +193,21 @@ but this actually has another added benefit to it - which we'll illustrate by ex
 <p>Because the subquery is <code>CORRELATED</code> it runs once per row of album, which is expensive for large data sets.
 The subsequent <code>SEARCH</code> comes from the <code>WHERE artistAlbum.artist = album.artist</code>, there's no index on the <code>album.artist</code>
 column so it just has to search the table for a match. Now we'll check out the one using a common table expression.</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">EXPLAIN</span> <span class="n">QUERY</span> <span class="n">PLAN</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">EXPLAIN</span> <span class="n">QUERY</span> <span class="n">PLAN</span>
 <span class="k">WITH</span> <span class="n">artistInfo</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">activeUntil</span><span class="p">)</span> <span class="k">AS</span> <span class="p">(</span>
   <span class="k">SELECT</span> <span class="n">artist</span><span class="p">,</span> <span class="k">max</span><span class="p">(</span><span class="n">year_of_release</span><span class="p">)</span>
   <span class="k">FROM</span> <span class="n">album</span>
@@ -161,7 +217,9 @@ column so it just has to search the table for a match. Now we'll check out the o
 <span class="k">FROM</span> <span class="n">album</span>
 <span class="k">JOIN</span> <span class="n">artistInfo</span> <span class="k">ON</span> <span class="p">(</span><span class="n">artist</span> <span class="o">=</span> <span class="n">artistInfo</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
 <span class="k">WHERE</span> <span class="n">year_of_release</span> <span class="o">=</span> <span class="n">artistInfo</span><span class="p">.</span><span class="n">activeUntil</span><span class="p">;</span>
-</code></pre></div><table>
+</code></pre></td></tr></table>
+</div>
+</div><table>
 <thead>
 <tr>
 <th>id</th>
@@ -198,7 +256,21 @@ just happens once so this query becomes a lot more performant.</p>
 <p>There's one other huge benefit to common table expressions, which is that you can do
 recursion! They're harder to follow and potentially defeat &ldquo;easier to read and maintain&rdquo; but sometimes they're the simplest solution and worth
 knowing. Here's a recursive query that comes in handy for splitting a single string into a table where each row is one word:</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="k">RECURSIVE</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="k">RECURSIVE</span>
 <span class="n">split_string</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">str</span><span class="p">)</span> <span class="k">AS</span> <span class="p">(</span>
     <span class="k">SELECT</span> <span class="s1">&#39;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="p">:</span><span class="k">input</span> <span class="o">|</span><span class="o">|</span> <span class="s1">&#39;</span><span class="s1"> </span><span class="s1">&#39;</span>
     <span class="k">UNION</span> <span class="k">ALL</span> <span class="k">SELECT</span>
@@ -208,7 +280,9 @@ knowing. Here's a recursive query that comes in handy for splitting a single str
 <span class="p">)</span>
 
 <span class="k">SELECT</span> <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-</code></pre></div><p>To show how this works lets run it with <code>:input</code> = <code>&quot;hello recursive world&quot;</code>:</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>To show how this works lets run it with <code>:input</code> = <code>&quot;hello recursive world&quot;</code>:</p>
 <table>
 <thead>
 <tr>
@@ -241,10 +315,19 @@ then the sqlite runtime pops off a row from the queue, runs the query after the 
 queue. Eventually <code>str</code> is empty so the query after <code>UNION ALL</code> pushes nothing onto the queue, so it ends. The results above are both the queue forming
 and the table created at the end.</p>
 <p>Since we only care about the words you just have to modify how you select from the query:</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="n">word</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="n">word</span>
 <span class="k">FROM</span> <span class="n">split_string</span>
 <span class="k">WHERE</span> <span class="n">word</span> <span class="o">!</span><span class="o">=</span> <span class="s1">&#39;</span><span class="s1">&#39;</span><span class="p">;</span>
-</code></pre></div><table>
+</code></pre></td></tr></table>
+</div>
+</div><table>
 <thead>
 <tr>
 <th>word</th>
@@ -276,7 +359,7 @@ which can be a lot more performant than writing the query to use <code>WHERE ___
         <div class="post-info-line">
             <div class="post-info-md"></div>
             <div class="post-info-share">
-                <span></span>
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://alecstrong.com/posts/cte/" data-title="SQLite Helper Queries" data-via="Strongolopolis"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="Share on Reddit" data-sharer="reddit" data-url="https://alecstrong.com/posts/cte/"><i class="fab fa-reddit fa-fw"></i></a></span>
             </div>
         </div>
     </div>
@@ -294,7 +377,7 @@ which can be a lot more performant than writing the query to use <code>WHERE ___
 </article></div>
             </main><footer class="footer">
         <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.62.2">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
-                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Alec Strong</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Alec Strong</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
         </div>
     </footer></div>
 
@@ -303,5 +386,5 @@ which can be a lot more performant than writing the query to use <code>WHERE ___
             </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
                 <i class="fas fa-comment fa-fw"></i>
             </a>
-        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
 </html>

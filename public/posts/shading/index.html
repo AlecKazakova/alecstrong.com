@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>What we do in the shadows - AlecStrong</title><meta name="Description" content=""><meta property="og:title" content="What we do in the shadows" />
+<meta property="og:description" content="If you&#39;re in the business of publishing JVM libraries its possible you&#39;ve needed to deal with dependency shading - bundling external jars in with your library and renaming the packages along the way to prevent a diamond dependency conflict.
+If your published JVM library is built with Gradle it&#39;s then likely you&#39;ve used John Engleman&#39;s shading plugin &lsquo;shadow&rsquo;. It&#39;s really a fantastic plugin to solve this problem, thank you mr engleman." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://alecstrong.com/posts/shading/" />
+<meta property="article:published_time" content="2021-04-03T17:24:07-04:00" />
+<meta property="article:modified_time" content="2021-04-15T19:36:55-04:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="What we do in the shadows"/>
+<meta name="twitter:description" content="If you&#39;re in the business of publishing JVM libraries its possible you&#39;ve needed to deal with dependency shading - bundling external jars in with your library and renaming the packages along the way to prevent a diamond dependency conflict.
+If your published JVM library is built with Gradle it&#39;s then likely you&#39;ve used John Engleman&#39;s shading plugin &lsquo;shadow&rsquo;. It&#39;s really a fantastic plugin to solve this problem, thank you mr engleman."/>
+<meta name="application-name" content="AlecStrong">
+<meta name="apple-mobile-web-app-title" content="AlecStrong"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://alecstrong.com/posts/shading/" /><link rel="prev" href="https://alecstrong.com/posts/sqlite-sdk-30/" /><link rel="next" href="https://alecstrong.com/posts/local-kmm/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "What we do in the shadows",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/alecstrong.com\/posts\/shading\/"
+        },"genre": "posts","wordcount":  1727 ,
+        "url": "https:\/\/alecstrong.com\/posts\/shading\/","datePublished": "2021-04-03T17:24:07-04:00","dateModified": "2021-04-15T19:36:55-04:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Alec Strong"},"author": {
+                "@type": "Person",
+                "name": "Alec Strong"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : '' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="AlecStrong">AlecStrong</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/talks/"> Talks </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="AlecStrong">AlecStrong</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/talks/" title="">Talks</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">What we do in the shadows</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>Alec Strong</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-04-03">2021-04-03</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1727 words&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;9 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#setup">Setup</a></li>
+        <li><a href="#problem-1-jar-too-big">Problem 1: Jar too big</a></li>
+        <li><a href="#problem-2-transitive-dependencies">Problem 2: Transitive Dependencies</a></li>
+        <li><a href="#problem-3-the-gradle-plugin-is-missing-relocating-project-dependencies">Problem 3: The Gradle plugin is missing (relocating project dependencies)</a></li>
+        <li><a href="#problem-4-the-jar-is-still-too-damn-big">Problem 4: The Jar is still Too Damn Big</a></li>
+        <li><a href="#problem-5-dont-shade-entire-programming-languages">Problem 5: Don't shade entire programming languages</a></li>
+        <li><a href="#finished">Finished</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>If you're in the business of publishing JVM libraries its possible you've needed to deal with
+dependency shading - bundling external jars in with your library and renaming the packages along
+the way to prevent a <a href="https://jlbp.dev/what-is-a-diamond-dependency-conflict#:~:text=A%20diamond%20dependency%20conflict%20is,features%20that%20the%20consumers%20expect." target="_blank" rel="noopener noreffer">diamond dependency conflict</a>.</p>
+<p>If your published JVM library is built with Gradle it's then likely you've used <a href="https://github.com/johnrengelman/shadow" target="_blank" rel="noopener noreffer">John Engleman's
+shading plugin &lsquo;shadow&rsquo;</a>. It's really a fantastic plugin
+to solve this problem, thank you mr engleman. There's thorough documentation including some on
+how to <a href="https://imperceptiblethoughts.com/shadow/plugins/" target="_blank" rel="noopener noreffer">shade Gradle plugins</a>, which I needed to
+do for SQLDelight and subsequently failed at for the past year until finally getting it working
+recently. I do not
+blame the plugin or the documentation, everything you need is there it's just an incredibly hard
+problem that took me a long time to wrap my head around, so I am writing this for future JVM library
+authors bundling IntelliJ IDEA in a Gradle plugin of which I am sure there will be many.</p>
+<p>One thing that's incredibly useful to know: <code>.jar</code> files are just <code>.zip</code> files. You can just rename
+the file to have the <code>.zip</code> extension, unzip that file and then peruse all the classes and whatnot
+inside. I found this to be the easiest way to debug why my shadow jar was causing issues.</p>
+<h3 id="setup">Setup</h3>
+<p>As of writing the shadow documentation is slightly out of date (it's still using the compile
+configuration) and so on first attempt shading the SQLDelight Gradle plugin looked something like
+this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="c1">// sqldelight-gradle-plugin
+</span><span class="c1"></span><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;com.github.johnrengelman.shadow&#39;</span>
+
+<span class="n">dependencies</span> <span class="o">{</span>
+  <span class="n">implementation</span> <span class="nf">project</span><span class="o">(</span><span class="s1">&#39;:sqlite-migrations&#39;</span><span class="o">)</span>
+  <span class="n">implementation</span> <span class="nf">project</span><span class="o">(</span><span class="s1">&#39;:sqldelight-compiler&#39;</span><span class="o">)</span>
+
+  <span class="n">implementation</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">core</span>
+  <span class="n">implementation</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">java</span>
+  <span class="n">implementation</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">lang</span>
+  <span class="n">implementation</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">testFramework</span>
+
+  <span class="n">compileOnly</span> <span class="nf">gradleApi</span><span class="o">(</span><span class="o">)</span>
+  <span class="n">implementation</span> <span class="n">deps</span><span class="o">.</span><span class="na">plugins</span><span class="o">.</span><span class="na">kotlin</span>
+  <span class="n">compileOnly</span> <span class="n">deps</span><span class="o">.</span><span class="na">plugins</span><span class="o">.</span><span class="na">android</span>
+<span class="o">}</span>
+
+<span class="n">task</span> <span class="nf">relocateShadowJar</span><span class="o">(</span><span class="nl">type:</span> <span class="n">ConfigureShadowRelocation</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">target</span> <span class="o">=</span> <span class="n">tasks</span><span class="o">.</span><span class="na">shadowJar</span>
+<span class="o">}</span>
+
+<span class="n">tasks</span><span class="o">.</span><span class="na">shadowJar</span><span class="o">.</span><span class="na">dependsOn</span> <span class="n">tasks</span><span class="o">.</span><span class="na">relocateShadowJar</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Some of these dependencies require explanation - SQLDelight uses the IntelliJ APIs for its compiler,
+as seen in it's <code>build.gradle</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="c1">// sqldelight-compiler
+</span><span class="c1"></span><span class="n">dependencies</span> <span class="o">{</span>
+  <span class="n">implementation</span> <span class="n">deps</span><span class="o">.</span><span class="na">sqliteJdbc</span>
+
+  <span class="n">compileOnly</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">core</span>
+  <span class="n">compileOnly</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">lang</span>
+  <span class="n">compileOnly</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">java</span>
+  <span class="n">compileOnly</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">testFramework</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Marking a dependency as <code>compileOnly</code> means that those classes will be used during
+compilation, but someone else will provide them at runtime. We do this because the IntelliJ plugin
+also uses the compiler but already has the IntelliJ APIs on its runtime classpath.</p>
+<p>However the Gradle plugin is not running in IntelliJ - we need to include those artifacts as
+dependencies and can do that by marking them as <code>implementation</code> as shown in the Gradle plugins
+dependencies block above. <code>gradleApi()</code> and <code>deps.plugins.android</code> are both marked <code>compileOnly</code> because we also
+expect those dependencies to be available at runtime without us asking for them.</p>
+<h3 id="problem-1-jar-too-big">Problem 1: Jar too big</h3>
+<p>This doesn't work. IntelliJ is enormous and bloats the shadow jar to be bigger than the 65k limit
+jars have on class files<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. Android developers have probably had nightmares about that number.
+Easy enough to fix! minimize the shadow jar:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">tasks</span><span class="o">.</span><span class="na">getByName</span><span class="o">(</span><span class="s2">&#34;shadowJar&#34;</span><span class="o">)</span><span class="o">.</span><span class="na">configure</span> <span class="o">{</span>
+  <span class="n">dependsOn</span><span class="o">(</span><span class="s2">&#34;relocateShadowJar&#34;</span><span class="o">)</span>
+  <span class="n">minimize</span><span class="o">(</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="problem-2-transitive-dependencies">Problem 2: Transitive Dependencies</h3>
+<p>Now our jar is small enough, but when we run the SQLDelight tests they crash with this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">No suitable driver found for jdbc:sqlite
+</code></pre></td></tr></table>
+</div>
+</div><p>Which after way too much sitting and staring at my setup I realized was caused by <a href="https://github.com/xerial/sqlite-jdbc/blob/master/src/main/resources/java.sql.Driver" target="_blank" rel="noopener noreffer">this</a>,
+and <code>minimize()</code> stripping the actual <code>Driver</code> implementation since it isn't <em>technically</em> used in
+my source code anywhere, it was just referenced in a Java resources file. No problem, you can make
+sure minimize avoids certain packages:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">tasks</span><span class="o">.</span><span class="na">getByName</span><span class="o">(</span><span class="s2">&#34;shadowJar&#34;</span><span class="o">)</span><span class="o">.</span><span class="na">configure</span> <span class="o">{</span>
+  <span class="n">minimize</span> <span class="o">{</span>
+    <span class="n">exclude</span><span class="o">(</span><span class="n">dependency</span><span class="o">(</span><span class="s1">&#39;org.xerial:sqlite-jdbc:*&#39;</span><span class="o">)</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Now when we go to run the SQLDelight tests we get something about joda time not being able to figure
+out the time zone. &ldquo;Ahhhhhhhhhhhh&rdquo; this is so far from the problem I'm trying to solve, and I certainly don't want
+to be leaking transitive dependencies into the implementation details of the Gradle plugin,
+so a new route needed to be formed.</p>
+<p>I really <em>only</em> want to shade the IntelliJ dependencies, because those are the
+ones that cause <a href="https://github.com/cashapp/sqldelight/issues/1998" target="_blank" rel="noopener noreffer">major problems</a>.
+The tricky thing about this is that shadow will not filter <a href="https://imperceptiblethoughts.com/shadow/configuration/dependencies/#filtering-dependencies" target="_blank" rel="noopener noreffer">transitive dependencies</a>
+when shadowing, so if you shade a project dependency (in this case my <code>:sqlite-migrations</code> dependency),
+you <em>have</em> to shade all of it's dependencies (in this case, xerial and transitively jodatime). The trick
+to get around this goes back to <code>compileOnly</code> vs <code>implementation</code>, we can control which dependencies are
+shaded at the <code>sqldelight-gradle-plugin</code> level, so if we just mark all transitive dependencies as <code>compileOnly</code>
+we can pick and choose which ones we want shaded.</p>
+<p>Before I show the resulting Gradle (it's not pretty), I'll recap:</p>
+<ol>
+<li>We need to pick and choose which dependencies to shade, in this case the IntelliJ dependencies
+and any dependencies that use IntelliJ.</li>
+<li><code>compileOnly</code> dependencies do not get shaded.</li>
+<li><code>shade</code> dependencies will be bundled into the resulting jar</li>
+<li>we still need <code>implementation</code> dependencies (like xerial:sqlite-jdbc) to be a normal (non-shaded) dependency.</li>
+</ol>
+<p>Okay here's the Gradle file!</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;com.github.johnrengelman.shadow&#39;</span>
+
+<span class="n">configurations</span> <span class="o">{</span>
+  <span class="n">shade</span>
+<span class="o">}</span>
+
+<span class="n">configurations</span><span class="o">.</span><span class="na">compileOnly</span><span class="o">.</span><span class="na">extendsFrom</span><span class="o">(</span><span class="n">configurations</span><span class="o">.</span><span class="na">shade</span><span class="o">)</span>
+
+<span class="n">dependencies</span> <span class="o">{</span>
+  <span class="n">implementation</span> <span class="n">deps</span><span class="o">.</span><span class="na">sqliteJdbc</span>
+  <span class="n">implementation</span> <span class="n">deps</span><span class="o">.</span><span class="na">objectDiff</span>
+  <span class="n">implementation</span> <span class="n">deps</span><span class="o">.</span><span class="na">schemaCrawler</span><span class="o">.</span><span class="na">tools</span>
+  <span class="n">implementation</span> <span class="n">deps</span><span class="o">.</span><span class="na">schemaCrawler</span><span class="o">.</span><span class="na">sqlite</span>
+
+  <span class="n">shade</span> <span class="n">deps</span><span class="o">.</span><span class="na">sqlitePsi</span>
+  <span class="n">shade</span> <span class="nf">project</span><span class="o">(</span><span class="s1">&#39;:sqlite-migrations&#39;</span><span class="o">)</span>
+  <span class="n">shade</span> <span class="nf">project</span><span class="o">(</span><span class="s1">&#39;:sqldelight-compiler&#39;</span><span class="o">)</span>
+  <span class="n">shade</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">core</span>
+  <span class="n">shade</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">java</span>
+  <span class="n">shade</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">lang</span>
+  <span class="n">shade</span> <span class="n">deps</span><span class="o">.</span><span class="na">intellij</span><span class="o">.</span><span class="na">testFramework</span>
+
+  <span class="n">compileOnly</span> <span class="nf">gradleApi</span><span class="o">(</span><span class="o">)</span>
+  <span class="n">implementation</span> <span class="n">deps</span><span class="o">.</span><span class="na">plugins</span><span class="o">.</span><span class="na">kotlin</span>
+  <span class="n">compileOnly</span> <span class="n">deps</span><span class="o">.</span><span class="na">plugins</span><span class="o">.</span><span class="na">android</span>
+<span class="o">}</span>
+
+
+<span class="n">tasks</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="s2">&#34;relocateShadowJar&#34;</span><span class="o">,</span> <span class="n">ConfigureShadowRelocation</span><span class="o">.</span><span class="na">class</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">target</span> <span class="o">=</span> <span class="n">tasks</span><span class="o">.</span><span class="na">shadowJar</span>
+  <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&#34;sqldelight&#34;</span>
+<span class="o">}</span>
+
+<span class="n">tasks</span><span class="o">.</span><span class="na">getByName</span><span class="o">(</span><span class="s2">&#34;shadowJar&#34;</span><span class="o">)</span><span class="o">.</span><span class="na">configure</span> <span class="o">{</span>
+  <span class="n">dependsOn</span><span class="o">(</span><span class="s2">&#34;relocateShadowJar&#34;</span><span class="o">)</span>
+  <span class="n">minimize</span><span class="o">(</span><span class="o">)</span>
+  <span class="n">configurations</span> <span class="o">=</span> <span class="o">[</span><span class="n">project</span><span class="o">.</span><span class="na">configurations</span><span class="o">.</span><span class="na">shade</span><span class="o">]</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>We now have three configurations:</p>
+<ol>
+<li><code>compileOnly</code> for dependencies that will be available at runtime that we do not need to depend on at all.</li>
+<li><code>implementation</code> for dependencies we do not want shaded (ie just use normal maven coordinates).</li>
+<li><code>shade</code> for dependencies that we want shaded (bundled into the artifact jar with package names changed so we dont get conflicts).</li>
+</ol>
+<p>The core shaded dependencies are all the <code>deps.intellij</code> ones, the other three (<code>:sqlite-migrations</code>, <code>:sqldelight-compiler</code>, and <code>deps.sqlitePsi</code>)
+also need to be shaded because they transitively depend on the intellij apis - if they didn't get shaded they would still
+reference <code>org.jetbrains.intellij</code> instead of <code>sqldelight.org.jetbrains.intellij</code> (the new shaded dependencies)
+and get NoClassDef errors. Importantly the <code>implementation</code> dependencies in this module must be marked as <code>compileOnly</code> in
+those downstream modules (like <code>:sqlite-migrations</code>) otherwise they would get shaded.</p>
+<h3 id="problem-3-the-gradle-plugin-is-missing-relocating-project-dependencies">Problem 3: The Gradle plugin is missing (relocating project dependencies)</h3>
+<p>I wish we were done. Still loads to go. Now we run our Gradle plugin and find that it is missing:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">NoClassDefFoundError: Cannot find class com.squareup.sqldelight.SqlDelightPlugin
+</code></pre></td></tr></table>
+</div>
+</div><p>Whenever you see a NoClassDefFoundError in this process, the easiest thing to do is the <code>.zip</code> trick
+from above and start searching. What I found in my <code>.jar</code> was that <code>SqlDelightPlugin</code> was there but
+had been moved to <code>sqldelight.com.squareup.sqldelight.SqlDelightPlugin</code>: it was relocated
+as part of the shading process. The <code>ConfigureShadowRelocation</code> task is pretty straightforwad and
+looking through it's <a href="https://github.com/johnrengelman/shadow/blob/master/src/main/groovy/com/github/jengelman/gradle/plugins/shadow/tasks/ConfigureShadowRelocation.groovy" target="_blank" rel="noopener noreffer">source code</a>
+we can see whats happening:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">JarFile</span> <span class="n">jf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JarFile</span><span class="o">(</span><span class="n">jar</span><span class="o">)</span>
+<span class="n">jf</span><span class="o">.</span><span class="na">entries</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">each</span> <span class="o">{</span> <span class="n">entry</span> <span class="o">-</span><span class="o">&gt;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">endsWith</span><span class="o">(</span><span class="s2">&#34;.class&#34;</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">packages</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">entry</span><span class="o">.</span><span class="na">name</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="o">.</span><span class="na">entry</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="s1">&#39;/&#39;</span><span class="o">)</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s1">&#39;/&#39;</span><span class="o">,</span> <span class="s1">&#39;.&#39;</span><span class="o">)</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>For every dependency in the <code>shade</code> configuration we locate all its packages and register them to
+be relocated. Unfortunately because we shade a project dependency (<code>:sqldelight-compiler</code>),
+the task is finding the <code>com.squareup.sqldelight</code> package in that project dependency and asking that it
+be relocated. This also means the root project that shares the same package will have <strong>its</strong> dependencies
+relocated too, and in this case the Gradle plugin itself. There is no officially documented way to remove
+packages to be relocated but I was able to plug in to the task directly like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">tasks</span><span class="o">.</span><span class="na">getByName</span><span class="o">(</span><span class="s2">&#34;shadowJar&#34;</span><span class="o">)</span><span class="o">.</span><span class="na">configure</span> <span class="o">{</span>
+  <span class="n">doFirst</span> <span class="o">{</span>
+    <span class="n">relocators</span> <span class="o">=</span> <span class="n">relocators</span><span class="o">.</span><span class="na">grep</span> <span class="o">{</span>
+      <span class="o">!</span><span class="n">it</span><span class="o">.</span><span class="na">getPattern</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s2">&#34;com.squareup.sqldelight&#34;</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="problem-4-the-jar-is-still-too-damn-big">Problem 4: The Jar is still Too Damn Big</h3>
+<p>We're no longer hitting limits for the size of our jar, but looking into its contents we still see
+a lot of extras from intellij: including things like svg and png files, which are definitely not
+needed for a Gradle plugin to function. The only things really needed for a Gradle plugin are the
+class files, so we can configure the shadowJar to only include those:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">tasks</span><span class="o">.</span><span class="na">getByName</span><span class="o">(</span><span class="s2">&#34;shadowJar&#34;</span><span class="o">)</span><span class="o">.</span><span class="na">configure</span> <span class="o">{</span>
+  <span class="o">.</span><span class="o">.</span><span class="o">.</span>
+  <span class="n">include</span> <span class="s1">&#39;*.jar&#39;</span>
+  <span class="n">include</span> <span class="s1">&#39;**/*.class&#39;</span>
+  <span class="n">include</span> <span class="s1">&#39;META-INF/gradle-plugins/*&#39;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>We need to <code>include '*.jar'</code> because the shadow plugin works in phases, and on its first phase it
+is dealing purely with <code>.jar</code> files and not <code>.class</code> files yet. We also need to make sure we include
+the Gradle plugin registration files.</p>
+<h3 id="problem-5-dont-shade-entire-programming-languages">Problem 5: Don't shade entire programming languages</h3>
+<p>SqlDelight makes heavy use of kotlinpoet to do it's codegen, which in turn inspects parts of the
+kotlin stdlib in order to know what to generate. Because of that transitive dependency this setup
+was shading the kotlin stdlib and then generating code against that shaded dependency, and not the
+actual real kotlin stdlib. This resulted in some REALLY weird compile time exceptions that looked
+something like</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">Unexpected type FunctionN, expected FunctionN
+</code></pre></td></tr></table>
+</div>
+</div><p>The same happened with groovy, as our Gradle plugin uses some groovy reflection in its implementation.
+The type that SQLDelight was given was a <code>groovy.Closure</code>, but it was looking for a <code>sqldelight.groovy.Closure</code>.</p>
+<p>If you are inspecting your shadow jar <code>.zip</code> and see that it has and programming languages in there,
+you definitely want to exclude those. Similar to the Gradle API we're guaranteed something like
+groovy is going to be there, and transitively we'll pick up kotlin as well. Similar to our
+includes we can choose which classes not to include in our shadowJar, but we also need to make sure
+we dont relocate the packages for those standard libs:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">doFirst</span> <span class="o">{</span>
+  <span class="n">relocators</span> <span class="o">=</span> <span class="n">relocators</span><span class="o">.</span><span class="na">grep</span> <span class="o">{</span>
+    <span class="o">!</span><span class="n">it</span><span class="o">.</span><span class="na">getPattern</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s2">&#34;com.squareup.sqldelight&#34;</span><span class="o">)</span> <span class="o">&amp;</span><span class="o">&amp;</span>
+            <span class="o">!</span><span class="n">it</span><span class="o">.</span><span class="na">getPattern</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s2">&#34;groovy&#34;</span><span class="o">)</span> <span class="o">&amp;</span><span class="o">&amp;</span>
+            <span class="o">!</span><span class="n">it</span><span class="o">.</span><span class="na">getPattern</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s2">&#34;kotlin&#34;</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">exclude</span> <span class="s1">&#39;/groovy**&#39;</span>
+<span class="n">exclude</span> <span class="s1">&#39;/kotlin/**&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="finished">Finished</h3>
+<p>So end the woes of shading our Gradle plugin. <a href="https://github.com/cashapp/sqldelight/blob/master/sqldelight-gradle-plugin/build.gradle#L83-L112" target="_blank" rel="noopener noreffer">Here</a> is the final setup
+for SQLDelight with all the steps outlined above. If you're a user of SQLDelight the only thing thats changing
+is that Gradle plugin shrank from 56mb to 13mb (!!!) and hopefully you will encounter no classpath issues
+using the project. I hope I never have to think about this again.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>I cannot remember if class files were the thing limited by 65k. It might have been raw resources. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2021-04-15&nbsp;<a class="git-hash" href="https://github.com/alecstrong/alecstrong.com/commit/cc557b439ebb8e9e51be8bf98549e6da41457892" target="_blank" title="commit by Alec Strong(astrong@squareup.com) cc557b439ebb8e9e51be8bf98549e6da41457892: New post who dis">
+                                    <i class="fas fa-hashtag fa-fw"></i>cc557b4</a></span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://alecstrong.com/posts/shading/" data-title="What we do in the shadows" data-via="Strongolopolis"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="Share on Reddit" data-sharer="reddit" data-url="https://alecstrong.com/posts/shading/"><i class="fab fa-reddit fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/sqlite-sdk-30/" class="prev" rel="prev" title="Mysterious SQLite bugs and how to solve them."><i class="fas fa-angle-left fa-fw"></i>Mysterious SQLite bugs and how to solve them.</a>
+            <a href="/posts/local-kmm/" class="next" rel="next" title="Testing a Shared KMM Repo Locally">Testing a Shared KMM Repo Locally<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.62.2">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Alec Strong</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

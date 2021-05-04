@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Testing a Shared KMM Repo Locally - AlecStrong</title><meta name="Description" content=""><meta property="og:title" content="Testing a Shared KMM Repo Locally" />
+<meta property="og:description" content="There&#39;s a lot of different ways of organizing your Kotlin Multiplatform Mobile codebase, Ben Asher and I gave an overview of some of those at KotlinConf 2019, where I described a setup where the shared code lives in your iOS and Android codebase and is copied between them. The pro of this was an easy local development setup, but there are a lot of cons. We moved away from this style to a separate (third) repository for the multiplatform code last year." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://alecstrong.com/posts/local-kmm/" />
+<meta property="article:published_time" content="2021-05-03T21:37:14-04:00" />
+<meta property="article:modified_time" content="2021-05-03T21:37:14-04:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Testing a Shared KMM Repo Locally"/>
+<meta name="twitter:description" content="There&#39;s a lot of different ways of organizing your Kotlin Multiplatform Mobile codebase, Ben Asher and I gave an overview of some of those at KotlinConf 2019, where I described a setup where the shared code lives in your iOS and Android codebase and is copied between them. The pro of this was an easy local development setup, but there are a lot of cons. We moved away from this style to a separate (third) repository for the multiplatform code last year."/>
+<meta name="application-name" content="AlecStrong">
+<meta name="apple-mobile-web-app-title" content="AlecStrong"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://alecstrong.com/posts/local-kmm/" /><link rel="prev" href="https://alecstrong.com/posts/shading/" /><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Testing a Shared KMM Repo Locally",
+        "inLanguage": "en",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/alecstrong.com\/posts\/local-kmm\/"
+        },"genre": "posts","wordcount":  596 ,
+        "url": "https:\/\/alecstrong.com\/posts\/local-kmm\/","datePublished": "2021-05-03T21:37:14-04:00","dateModified": "2021-05-03T21:37:14-04:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "Alec Strong"},"author": {
+                "@type": "Person",
+                "name": "Alec Strong"
+            },"description": ""
+    }
+    </script></head>
+    <body header-desktop="" header-mobile=""><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : '' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="AlecStrong">AlecStrong</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/talks/"> Talks </a><span class="menu-item delimiter"></span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="AlecStrong">AlecStrong</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/talks/" title="">Talks</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw"></i>
+            </a></div>
+    </div>
+</header>
+<div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+</div>
+<div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+</div>
+<main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animated flipInX">Testing a Shared KMM Repo Locally</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>Alec Strong</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime="2021-05-03">2021-05-03</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;596 words&nbsp;
+                <i class="far fa-clock fa-fw"></i>&nbsp;3 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#android">Android</a></li>
+        <li><a href="#ios">iOS</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><p>There's a lot of different ways of organizing your Kotlin Multiplatform Mobile codebase, Ben Asher
+and I gave an overview of some of those at <a href="https://youtu.be/je8aqW48JiA?t=1891" target="_blank" rel="noopener noreffer">KotlinConf 2019</a>,
+where I described a setup where the shared code lives in your iOS and Android codebase and is copied
+between them. The pro of this was an easy local development setup, but there are a lot of cons. We
+moved away from this style to a separate (third) repository for the multiplatform code last year.</p>
+<p>The general model for working in this new third repository is:</p>
+<ol>
+<li>Write shared code in the repository with unit tests.</li>
+<li>Publish a local version of the artifact (.jar for Android, .framework for iOS)</li>
+<li>Use that published local artifact in the Android and iOS apps to develop your feature</li>
+<li>Once those are good to go, open a PR on the multiplatform repo</li>
+<li>Push a release version of the multiplatform</li>
+<li>Open a PR on the Android/iOS repos with the integrated change.</li>
+</ol>
+<p>There's lots of room for optimization here, but this post will focus on steps 2/3. Ideally we want
+to get back the ease of having the multiplatform code live in the app repos, and thankfully there
+are mechanisms to do just that both in Gradle and CocoaPods.</p>
+<h3 id="android">Android</h3>
+<p>Consider this Gradle module in an Android repo which uses your multiplatform codebase:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s2">&#34;com.android.library&#34;</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s2">&#34;org.jetbrains.kotlin.android&#34;</span>
+
+<span class="n">dependencies</span> <span class="o">{</span>
+  <span class="n">implementation</span> <span class="s2">&#34;app.cash.mobile.multiplatform:my-artifact:1.0.0&#34;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>If you have the mobile multiplatform repository checked out locally, you can just use that local
+copy directly using <a href="https://docs.gradle.org/current/userguide/composite_builds.html" target="_blank" rel="noopener noreffer">Gradle composite builds</a>.
+In your <code>settings.gradle</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">includeBuild</span><span class="o">(</span><span class="s1">&#39;path/to/mobile-multiplatform&#39;</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">dependencySubstitution</span> <span class="o">{</span>
+    <span class="n">substitute</span> <span class="nf">module</span><span class="o">(</span><span class="s2">&#34;app.cash.mobile.multiplatform:my-artifact&#34;</span><span class="o">)</span> <span class="n">with</span> <span class="n">project</span><span class="o">(</span><span class="s2">&#34;:my-module&#34;</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Now instead of downloading and using a maven artifact, it will build the included project and then
+use the Gradle subproject specified. Now you can make changes in your local copy of the multiplatform
+repo and see them reflected immediately.</p>
+<h3 id="ios">iOS</h3>
+<p>Our iOS setup uses CocoaPods which enables local development. Kotlin comes bundled with a CocoaPods
+integration you can apply to get things working.</p>
+<p>In your multiplatform Gradle project:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s2">&#34;org.jetbrains.kotlin.multiplatform&#34;</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s2">&#34;org.jetbrains.kotlin.native.cocoapods&#34;</span>
+
+<span class="n">kotlin</span> <span class="o">{</span>
+  <span class="n">cocoapods</span> <span class="o">{</span>
+    <span class="c1">// Configure fields required by CocoaPods.
+</span><span class="c1"></span>    <span class="n">summary</span> <span class="o">=</span> <span class="s2">&#34;Local development of the kotlin multiplatform module.&#34;</span>
+    <span class="n">homepage</span> <span class="o">=</span> <span class="s2">&#34;https://something.com/mobile-multiplatform&#34;</span>
+
+    <span class="c1">// You will want this to be the same name as your published .framework
+</span><span class="c1"></span>    <span class="n">frameworkName</span> <span class="o">=</span> <span class="s2">&#34;MyKmm&#34;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Applying the CocoaPods plugin also automatically configures some framework binaries. In our case
+we were creating those manually so instead we had to switch to configure the ones CocoaPods made.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-groovy" data-lang="groovy"><span class="n">kotlin</span> <span class="o">{</span>
+  <span class="n">sourceSets</span> <span class="o">{</span>
+    <span class="n">configure</span><span class="o">(</span><span class="n">listOf</span><span class="o">(</span><span class="n">iosArm32</span><span class="o">,</span> <span class="n">iosArm64</span><span class="o">,</span> <span class="n">iosX64</span><span class="o">)</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">compilations</span><span class="o">.</span><span class="na">findByName</span><span class="o">(</span><span class="s2">&#34;main&#34;</span><span class="o">)</span><span class="o">?</span><span class="o">.</span><span class="na">source</span><span class="o">(</span><span class="n">iosMain</span><span class="o">)</span>
+      <span class="n">listOf</span><span class="o">(</span>
+              <span class="n">binaries</span><span class="o">.</span><span class="na">getFramework</span><span class="o">(</span><span class="n">NativeBuildType</span><span class="o">.</span><span class="na">DEBUG</span><span class="o">)</span><span class="o">,</span>
+              <span class="n">binaries</span><span class="o">.</span><span class="na">getFramework</span><span class="o">(</span><span class="n">NativeBuildType</span><span class="o">.</span><span class="na">RELEASE</span><span class="o">)</span>
+      <span class="o">)</span><span class="o">.</span><span class="na">forEach</span> <span class="o">{</span>
+        <span class="n">it</span><span class="o">.</span><span class="na">isStatic</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="n">configurations</span><span class="o">.</span><span class="na">getByName</span><span class="o">(</span><span class="n">iosMain</span><span class="o">.</span><span class="na">apiConfigurationName</span><span class="o">)</span><span class="o">.</span><span class="na">dependencies</span><span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="nl">it:</span><span class="o">:</span><span class="n">export</span><span class="o">)</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Finally you will want to generate the <code>.podspec</code>, which you can do by running <code>./gradlew :my-module:podspec</code>.
+The output may need to be manually changed to adhere to your published artifact's naming; in our case
+the generated <code>.podspec</code> referred to the module name <code>umbrella</code> where we instead want it to use
+the framework name <code>CaskKt</code>, so we had to rename from <code>umbrella.podspec</code> to <code>CashKt.podspec</code> and change
+the <code>spec.name</code> property inside as well.</p>
+<p>Now in your actual iOS repository you can swap out this line of code in <code>Podfile</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="n">pod</span> <span class="s1">&#39;MyArtifact&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 1.0.0&#39;</span><span class="p">,</span> <span class="ss">source</span><span class="p">:</span> <span class="n">some_pod_repo</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>To this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="n">pod</span> <span class="s1">&#39;MyArtifact&#39;</span><span class="p">,</span> <span class="ss">:path</span> <span class="o">=</span><span class="o">&gt;</span> <span class="s1">&#39;path/to/mobile-multiplatform/my-module/&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>And running the iOS app will first build your local version of the multiplatform code and then run it. Yay!</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2021-05-03</span>
+            </div>
+            <div class="post-info-license"></div>
+        </div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="https://alecstrong.com/posts/local-kmm/" data-title="Testing a Shared KMM Repo Locally" data-via="Strongolopolis"><i class="fab fa-twitter fa-fw"></i></a><a href="javascript:void(0);" title="Share on Reddit" data-sharer="reddit" data-url="https://alecstrong.com/posts/local-kmm/"><i class="fab fa-reddit fa-fw"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/shading/" class="prev" rel="prev" title="What we do in the shadows"><i class="fas fa-angle-left fa-fw"></i>What we do in the shadows</a></div>
+</div>
+</article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.62.2">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Alec Strong</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw"></i>
+            </a>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":10},"comment":{}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

@@ -9,20 +9,20 @@
         <title>AlecStrong</title><meta name="Description" content=""><meta property="og:title" content="AlecStrong" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="http://alecstrong.com/" />
-<meta property="og:updated_time" content="2020-07-22T10:02:11-04:00" />
+<meta property="og:url" content="https://alecstrong.com/" />
+<meta property="og:updated_time" content="2021-05-03T21:37:14-04:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="AlecStrong"/>
 <meta name="twitter:description" content=""/>
 <meta name="application-name" content="AlecStrong">
 <meta name="apple-mobile-web-app-title" content="AlecStrong"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="http://alecstrong.com/" /><link rel="alternate" href="/index.xml" type="application/rss+xml" title="AlecStrong">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://alecstrong.com/" /><link rel="alternate" href="/index.xml" type="application/rss+xml" title="AlecStrong">
     <link rel="feed" href="/index.xml" type="application/rss+xml" title="AlecStrong"><link rel="stylesheet" href="/lib/normalize/normalize.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
     {
         "@context": "http://schema.org",
         "@type": "WebSite",
-        "url": "http:\/\/alecstrong.com\/","inLanguage": "en","author": {
+        "url": "https:\/\/alecstrong.com\/","inLanguage": "en","author": {
                 "@type": "Person",
                 "name": "Alec Strong"
             },"license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","name": "AlecStrong"
@@ -71,8 +71,17 @@
         data-srcset="https://www.gravatar.com/avatar/5fe8f40633300a70ea088a594cb33031?s=240&amp;d=mp, https://www.gravatar.com/avatar/5fe8f40633300a70ea088a594cb33031?s=240&amp;d=mp 1.5x, https://www.gravatar.com/avatar/5fe8f40633300a70ea088a594cb33031?s=240&amp;d=mp 2x"
         data-sizes="auto"
         alt="https://www.gravatar.com/avatar/5fe8f40633300a70ea088a594cb33031?s=240&amp;d=mp"
-        title="https://www.gravatar.com/avatar/5fe8f40633300a70ea088a594cb33031?s=240&amp;d=mp" /></a></div></div>
+        title="https://www.gravatar.com/avatar/5fe8f40633300a70ea088a594cb33031?s=240&amp;d=mp" /></a></div><div class="links"><a href="https://github.com/AlecStrong" title="GitHub" target="_blank" rel="noopener noreffer me"><i class="fab fa-github-alt fa-fw"></i></a><a href="https://twitter.com/Strongolopolis" title="Twitter" target="_blank" rel="noopener noreffer me"><i class="fab fa-twitter fa-fw"></i></a></div></div>
 <article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/posts/local-kmm/">Testing a Shared KMM Repo Locally</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>Alec Strong</a></span>&nbsp;<span class="post-publish">published on <time datetime="2021-05-03">2021-05-03</time></span></div><div class="content">There's a lot of different ways of organizing your Kotlin Multiplatform Mobile codebase, Ben Asher and I gave an overview of some of those at KotlinConf 2019, where I described a setup where the shared code lives in your iOS and Android codebase and is copied between them. The pro of this was an easy local development setup, but there are a lot of cons. We moved away from this style to a separate (third) repository for the multiplatform code last year.</div><div class="post-footer">
+        <a href="/posts/local-kmm/">Read More</a></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
+        <a href="/posts/shading/">What we do in the shadows</a>
+    </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>Alec Strong</a></span>&nbsp;<span class="post-publish">published on <time datetime="2021-04-03">2021-04-03</time></span></div><div class="content">If you're in the business of publishing JVM libraries its possible you've needed to deal with dependency shading - bundling external jars in with your library and renaming the packages along the way to prevent a diamond dependency conflict.
+If your published JVM library is built with Gradle it's then likely you've used John Engleman's shading plugin &lsquo;shadow&rsquo;. It's really a fantastic plugin to solve this problem, thank you mr engleman.</div><div class="post-footer">
+        <a href="/posts/shading/">Read More</a></div>
+</article><article class="single summary" itemscope itemtype="http://schema.org/Article"><h1 class="single-title" itemprop="name headline">
         <a href="/posts/sqlite-sdk-30/">Mysterious SQLite bugs and how to solve them.</a>
     </h1><div class="post-meta"><span class="post-author"><a href="/" title="Author" rel=" author" class="author"><i class="fas fa-user-circle fa-fw"></i>Alec Strong</a></span>&nbsp;<span class="post-publish">published on <time datetime="2020-07-22">2020-07-22</time></span></div><div class="content">TLDR: Android 30 upgrades SQLite from 3.22.0 -&gt; 3.28.0, this introduces new alter table behavior which will potentially cause runtime exceptions when ALTER TABLE statements are ran on tables which are used in a view. To preserve old behavior turn on PRAGMA legacy_alter_table=ON before running your migrations.
  Late last week we experienced a weird bug on Cash App happening to a few of our developers - reproducibly but not for everyone.</div><div class="post-footer">
@@ -93,7 +102,7 @@ With SqlDelight 1.2.2 we now also deploy Windows (mingW) artifacts, meaning it's
 </article></div></div>
             </main><footer class="footer">
         <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.62.2">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
-                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Alec Strong</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+                </div><div class="footer-line"><i class="far fa-copyright fa-fw"></i><span itemprop="copyrightYear">2020 - 2021</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank">Alec Strong</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
         </div>
     </footer></div>
 
@@ -102,5 +111,5 @@ With SqlDelight 1.2.2 we now also deploy Windows (mingW) artifacts, meaning it's
             </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
                 <i class="fas fa-comment fa-fw"></i>
             </a>
-        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":10}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+        </div><script type="text/javascript" src="/lib/smooth-scroll/smooth-scroll.min.js"></script><script type="text/javascript" src="/lib/lazysizes/lazysizes.min.js"></script><script type="text/javascript" src="/lib/clipboard/clipboard.min.js"></script><script type="text/javascript" src="/lib/sharer/sharer.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":10}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
 </html>

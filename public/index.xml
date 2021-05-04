@@ -1,38 +1,53 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>AlecStrong</title>
-        <link>http://alecstrong.com/</link>
+        <link>https://alecstrong.com/</link>
         <description>AlecStrong</description>
-        <generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Wed, 22 Jul 2020 10:02:11 -0400</lastBuildDate>
-            <atom:link href="http://alecstrong.com/index.xml" rel="self" type="application/rss+xml" />
+        <generator>Hugo -- gohugo.io</generator><language>en</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 03 May 2021 21:37:14 -0400</lastBuildDate>
+            <atom:link href="https://alecstrong.com/index.xml" rel="self" type="application/rss+xml" />
         <item>
+    <title>Testing a Shared KMM Repo Locally</title>
+    <link>https://alecstrong.com/posts/local-kmm/</link>
+    <pubDate>Mon, 03 May 2021 21:37:14 -0400</pubDate>
+    <author>Author</author>
+    <guid>https://alecstrong.com/posts/local-kmm/</guid>
+    <description><![CDATA[There's a lot of different ways of organizing your Kotlin Multiplatform Mobile codebase, Ben Asher and I gave an overview of some of those at KotlinConf 2019, where I described a setup where the shared code lives in your iOS and Android codebase and is copied between them. The pro of this was an easy local development setup, but there are a lot of cons. We moved away from this style to a separate (third) repository for the multiplatform code last year.]]></description>
+</item><item>
+    <title>What we do in the shadows</title>
+    <link>https://alecstrong.com/posts/shading/</link>
+    <pubDate>Sat, 03 Apr 2021 17:24:07 -0400</pubDate>
+    <author>Author</author>
+    <guid>https://alecstrong.com/posts/shading/</guid>
+    <description><![CDATA[If you're in the business of publishing JVM libraries its possible you've needed to deal with dependency shading - bundling external jars in with your library and renaming the packages along the way to prevent a diamond dependency conflict.
+If your published JVM library is built with Gradle it's then likely you've used John Engleman's shading plugin &lsquo;shadow&rsquo;. It's really a fantastic plugin to solve this problem, thank you mr engleman.]]></description>
+</item><item>
     <title>Mysterious SQLite bugs and how to solve them.</title>
-    <link>http://alecstrong.com/posts/sqlite-sdk-30/</link>
+    <link>https://alecstrong.com/posts/sqlite-sdk-30/</link>
     <pubDate>Wed, 22 Jul 2020 10:02:11 -0400</pubDate>
     <author>Author</author>
-    <guid>http://alecstrong.com/posts/sqlite-sdk-30/</guid>
+    <guid>https://alecstrong.com/posts/sqlite-sdk-30/</guid>
     <description><![CDATA[TLDR: Android 30 upgrades SQLite from 3.22.0 -&gt; 3.28.0, this introduces new alter table behavior which will potentially cause runtime exceptions when ALTER TABLE statements are ran on tables which are used in a view. To preserve old behavior turn on PRAGMA legacy_alter_table=ON before running your migrations.
  Late last week we experienced a weird bug on Cash App happening to a few of our developers - reproducibly but not for everyone.]]></description>
 </item><item>
     <title>SQLite Helper Queries</title>
-    <link>http://alecstrong.com/posts/cte/</link>
+    <link>https://alecstrong.com/posts/cte/</link>
     <pubDate>Wed, 13 May 2020 21:31:03 -0400</pubDate>
     <author>Author</author>
-    <guid>http://alecstrong.com/posts/cte/</guid>
+    <guid>https://alecstrong.com/posts/cte/</guid>
     <description><![CDATA[In programming one of the earliest tools we're given for simplifying complex code is helper functions. Splitting code into smaller more digestible blocks makes it easier to maintain and read, which is usually more important than code that's easier to write. In SQL we have tools for accomplishing the same thing! One of the bigger ones is views which can help share an underlying query between multiple other ones. Leandro Favarin wrote a great post on how to put views into practice in SQLite here.]]></description>
 </item><item>
     <title>Supporting Multiple Dialects in SQLDelight</title>
-    <link>http://alecstrong.com/posts/multiple-dialects/</link>
+    <link>https://alecstrong.com/posts/multiple-dialects/</link>
     <pubDate>Thu, 13 Feb 2020 13:15:17 -0500</pubDate>
     <author>Author</author>
-    <guid>http://alecstrong.com/posts/multiple-dialects/</guid>
+    <guid>https://alecstrong.com/posts/multiple-dialects/</guid>
     <description><![CDATA[With SQLDelight 1.3.0 and above we now support multiple dialects of SQL (at time of writing: SQLite 3.18, SQLite 3.24, and MySQL). They're not complete implementations of any of those dialects but they support necessary features and the real meat of the release is a straightforward framework for adding parts of the dialects incrementally. For example, SQLite 3.24 is just SQLite 3.18 with upsert on top (thank you Angus Holder!).]]></description>
 </item><item>
     <title>Integrating Github Actions for Kotlin Multiplatform</title>
-    <link>http://alecstrong.com/posts/github-actions-mpp/</link>
+    <link>https://alecstrong.com/posts/github-actions-mpp/</link>
     <pubDate>Thu, 23 Jan 2020 20:57:46 -0500</pubDate>
     <author>Author</author>
-    <guid>http://alecstrong.com/posts/github-actions-mpp/</guid>
+    <guid>https://alecstrong.com/posts/github-actions-mpp/</guid>
     <description><![CDATA[With Kotlin Multiplatform (KMP) it's possible to build artifacts for multiple platforms using the same toolchain, but until portable artifacts for KMP are released you need to build platform artifacts on their respective platforms.
 With SqlDelight 1.2.2 we now also deploy Windows (mingW) artifacts, meaning it's impossible to publish from a single OS (since we also support macOS targets). There was no simple setup with Travis and Github Actions is the new hot stuff so we gave that a go and here's how it works:]]></description>
 </item></channel>

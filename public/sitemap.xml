@@ -2,24 +2,26 @@
     xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     ><url>
-            <loc>http://alecstrong.com/</loc><lastmod>2020-07-22T11:03:05-04:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://alecstrong.com/posts/sqlite-sdk-30/</loc><lastmod>2020-07-22T11:03:05-04:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://alecstrong.com/posts/</loc><lastmod>2020-07-22T11:03:05-04:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
-            <loc>http://alecstrong.com/posts/cte/</loc><lastmod>2020-05-13T22:37:05-04:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>http://alecstrong.com/posts/multiple-dialects/</loc><lastmod>2020-02-13T14:54:01-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/eswa/</loc><lastmod>2020-01-24T10:03:37-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>http://alecstrong.com/posts/github-actions-mpp/</loc><lastmod>2020-01-24T11:43:00-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/</loc><lastmod>2020-01-24T10:03:37-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>http://alecstrong.com/talks/</loc><lastmod>2020-01-24T13:40:16-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/amd/</loc><priority>0</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/gadnat/</loc><priority>0</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/gkc/</loc><priority>0</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/gkc2/</loc><priority>0</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/ip/</loc><priority>0</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/kn/</loc><priority>0</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/mp/</loc><priority>0</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/tros/</loc><priority>0</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/wtbiwipfk/</loc><priority>0</priority></url><url>
-            <loc>http://alecstrong.com/categories/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>http://alecstrong.com/mytalks/sammpoia/</loc><lastmod>2020-01-24T10:03:37-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
-            <loc>http://alecstrong.com/tags/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url></urlset>
+            <loc>https://alecstrong.com/</loc><lastmod>2021-05-03T21:37:14-04:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>https://alecstrong.com/posts/</loc><lastmod>2021-05-03T21:37:14-04:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>https://alecstrong.com/posts/local-kmm/</loc><lastmod>2021-05-03T21:37:14-04:00</lastmod><changefreq>weekly</changefreq><priority>1</priority></url><url>
+            <loc>https://alecstrong.com/posts/shading/</loc><lastmod>2021-04-15T19:36:55-04:00</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url><url>
+            <loc>https://alecstrong.com/posts/sqlite-sdk-30/</loc><lastmod>2020-07-22T11:03:05-04:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://alecstrong.com/posts/cte/</loc><lastmod>2020-05-13T22:37:05-04:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://alecstrong.com/posts/multiple-dialects/</loc><lastmod>2020-02-13T14:54:01-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/eswa/</loc><lastmod>2020-01-24T10:03:37-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://alecstrong.com/posts/github-actions-mpp/</loc><lastmod>2020-01-24T11:43:00-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/</loc><lastmod>2020-01-24T10:03:37-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://alecstrong.com/talks/</loc><lastmod>2020-01-24T13:40:16-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/amd/</loc><priority>0</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/gadnat/</loc><priority>0</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/gkc/</loc><priority>0</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/gkc2/</loc><priority>0</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/ip/</loc><priority>0</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/kn/</loc><priority>0</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/mp/</loc><priority>0</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/tros/</loc><priority>0</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/wtbiwipfk/</loc><priority>0</priority></url><url>
+            <loc>https://alecstrong.com/categories/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://alecstrong.com/mytalks/sammpoia/</loc><lastmod>2020-01-24T10:03:37-05:00</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url><url>
+            <loc>https://alecstrong.com/tags/</loc><changefreq>weekly</changefreq><priority>0.5</priority></url></urlset>
