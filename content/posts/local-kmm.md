@@ -98,7 +98,7 @@ kotlin {
 Finally you will want to generate the `.podspec`, which you can do by running `./gradlew :my-module:podspec`.
 The output may need to be manually changed to adhere to your published artifact's naming; in our case
 the generated `.podspec` referred to the module name `umbrella` where we instead want it to use
-the framework name `CaskKt`, so we had to rename from `umbrella.podspec` to `CashKt.podspec` and change
+the framework name `CashKt`, so we had to rename from `umbrella.podspec` to `CashKt.podspec` and change
 the `spec.name` property inside as well.
 
 Now in your actual iOS repository you can swap out this line of code in `Podfile`:
