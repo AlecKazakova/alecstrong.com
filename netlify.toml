@@ -10,3 +10,7 @@ HUGO_ENABLEGITINFO = "true"
 [[redirects]]
   from = "/wedding"
   to = "https://youtu.be/YeeFQgooIQM"
+
+[[redirects]]
+  from = "/married"
+  to = "https://photos.app.goo.gl/4pFEECzTwsucv3KWA"
