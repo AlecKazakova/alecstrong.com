@@ -3,7 +3,7 @@ baseURL = "https://alecstrong.com/"
 defaultContentLanguage = "en"
 # language code
 languageCode = "en"
-title = "AlecStrong"
+title = "AlecKazakova"
 
 enableGitInfo = true
 enableEmoji = true
@@ -17,7 +17,7 @@ theme = "LoveIt"
   # LoveIt theme version
   version = "0.2.X"
   keywords = ["Programming", "SqlDelight"]
-  gitRepo = "https://github.com/alecstrong/alecstrong.com"
+  gitRepo = "https://github.com/aleckazakova/alecstrong.com"
 
   [params.page]
     linkToMarkdown = true
@@ -34,7 +34,7 @@ theme = "LoveIt"
       paginate = 6
 
   [params.social]
-    GitHub = "AlecStrong"
+    GitHub = "AlecKazakova"
     Twitter = "Strongolopolis"
 
   [params.footer]
@@ -94,7 +94,7 @@ theme = "LoveIt"
     endLevel = 6
 
 [author]
-  name = "Alec Strong"
+  name = "Alec Kazakova"
 
 [privacy]                                             #### Privacy Info (https://gohugo.io/about/hugo-and-gdpr/)
   [privacy.googleAnalytics]
