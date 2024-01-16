@@ -16,7 +16,7 @@ HUGO_ENABLEGITINFO = "true"
   to = "https://photos.app.goo.gl/4pFEECzTwsucv3KWA"
 
 [[redirects]]
-  from = "/.well_known/*"
-  to = "/well_known/:splat"
+  from = "/.well-known/*"
+  to = "/well-known/:splat"
   status = 200
   force = true
