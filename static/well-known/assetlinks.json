@@ -1,9 +1,11 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "app.cash.boxapp",
-    "sha256_cert_fingerprints":
-    ["DA:5E:71:A5:CA:3F:D4:08:A0:95:3B:DB:75:A9:65:29:9F:01:6E:4E:47:5F:26:E9:B7:DE:BC:B1:AD:7D:B8:72"]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.squareup.cash.beta",
+      "sha256_cert_fingerprints":
+        ["E4:17:02:63:7E:20:0E:73:96:0A:44:F8:64:C3:35:5A:B5:7E:24:36:EF:47:65:A9:6A:29:B6:B4:DD:22:BC:F9"]
+    }
   }
-}]
+]
